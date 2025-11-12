@@ -1,7 +1,5 @@
 # User-specific files
 *.rsuser
-*.suo
-*.user
 *.userosscache
 *.sln.docstates
 
@@ -20,3 +18,37 @@ _ReSharper*/
 
 # Others
 *.log
+
+# Build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# User and workspace files
+*.user
+*.suo
+.vs/
+*.vscode/
+*.dbmdl
+*.cache
+*.dswa.json
+*.vsidx
+*.futdcache.v2
+*.metadata.v9.bin
+*.projects.v9.bin
+*.string.v9.bin
+*.sourcelink.json
+
+# NuGet / project system
+project.assets.json
+project.nuget.cache
+*.nuget.g.props
+*.endpoints.json
+*.runtime.json
+*.build.json
+*.build.json.cache
+
+# Backup / temp files
+*.backup.json
