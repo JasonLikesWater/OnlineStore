@@ -1,0 +1,22 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folders
+.vs/
+_ReSharper*/
+*.DotSettings.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Database files
+*.mdf
+*.ldf
+
+# Others
+*.log
