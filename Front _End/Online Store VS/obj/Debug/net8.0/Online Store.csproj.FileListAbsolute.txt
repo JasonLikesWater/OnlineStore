@@ -65,3 +65,28 @@ C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\On
 C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\obj\Debug\net8.0\Online Store.pdb
 C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\obj\Debug\net8.0\Online Store.genruntimeconfig.cache
 C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\obj\Debug\net8.0\ref\Online Store.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\AdvancedStringBuilder.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\JavaScriptEngineSwitcher.Core.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\JavaScriptEngineSwitcher.V8.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\JSPool.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.Mvc.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.Razor.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.Helpers.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.WebPages.Deployment.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.WebPages.Razor.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\System.Web.WebPages.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\ClearScript.Core.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\ClearScript.V8.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\Microsoft.Web.Infrastructure.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\React.Core.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\React.Web.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\React.Web.Mvc4.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\WebActivatorEx.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\ru-RU\JavaScriptEngineSwitcher.Core.resources.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\ru-RU\JavaScriptEngineSwitcher.V8.resources.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\bin\Debug\net8.0\runtimes\win-x86\native\ClearScriptV8.win-x86.dll
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\obj\Debug\net8.0\Online Store.csproj.AssemblyReference.cache
+C:\Users\amend\OneDrive - University of Nebraska-Lincoln\Software Engineering\OnlineWebStore\OnlineStore\Front _End\Online Store VS\obj\Debug\net8.0\Online S.1C76CC0D.Up2Date

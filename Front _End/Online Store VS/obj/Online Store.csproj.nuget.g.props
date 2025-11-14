@@ -13,4 +13,10 @@
     <SourceRoot Include="C:\Users\amend\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.clearscript.v8.native.win-x86\7.2.5\build\Microsoft.ClearScript.V8.Native.win-x86.props" Condition="Exists('$(NuGetPackageRoot)microsoft.clearscript.v8.native.win-x86\7.2.5\build\Microsoft.ClearScript.V8.Native.win-x86.props')" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_ClearScript_V8_Native_win-x86 Condition=" '$(PkgMicrosoft_ClearScript_V8_Native_win-x86)' == '' ">C:\Users\amend\.nuget\packages\microsoft.clearscript.v8.native.win-x86\7.2.5</PkgMicrosoft_ClearScript_V8_Native_win-x86>
+  </PropertyGroup>
 </Project>
