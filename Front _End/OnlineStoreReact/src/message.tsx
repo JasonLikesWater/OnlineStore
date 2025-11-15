@@ -1,6 +1,5 @@
-
 function Message() {
-    return <h1> Jason Hates Water and two eggs make a duck</h1>;
+  return <h1> Start of the website</h1>;
 }
 
 export default Message;
