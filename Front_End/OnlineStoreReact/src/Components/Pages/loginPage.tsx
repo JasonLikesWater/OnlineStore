@@ -1,10 +1,10 @@
-function CartPage() {
+function LoginPage() {
   return (
     <>
       {" "}
       <figure className="text-center">
         <blockquote className="blockquote">
-          <p>This is the cart page</p>
+          <p>This is the Login page</p>
         </blockquote>
       </figure>
       ;
@@ -12,4 +12,4 @@ function CartPage() {
   );
 }
 
-export default CartPage;
+export default LoginPage;
