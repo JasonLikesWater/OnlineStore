@@ -12,96 +12,96 @@ DROP TABLE IF EXISTS Sales;
 DROP TABLE IF EXISTS Movies;
 
 CREATE TABLE Movies(
-	movie_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	title varchar(255),
-	director_id int,
-	studio varchar(255),
-	genre varchar(255),
-	rating int,
-	sku varchar(12),
-	price float,
-	weight float,
-	dimensions varchar(20),
-	description varchar(255),
-	cover_image varchar(255),
-	release_date varchar(10),
+	MovieId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	Title varchar(255),
+	DirectorId int,
+	Studio varchar(255),
+	GenreId int,
+	Rating int,
+	Sku varchar(12),
+	Price float,
+	Weight float,
+	Dimensions varchar(20),
+	Description varchar(255),
+	CoverImage varchar(255),
+	ReleaseDate varchar(10),
 );
 
 CREATE TABLE Sales(
-	sale_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	discount float,
-	start_date varchar(10) DEFAULT '0000-00-00',
-	end_date varchar(10) DEFAULT '0000-00-00',
-	category varchar(255) 
+	SaleId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	Discount float,
+	StartDate varchar(10) DEFAULT '0000-00-00',
+	EndDate varchar(10) DEFAULT '0000-00-00',
+	Category varchar(255) 
 );
 
 CREATE TABLE Users(
-	user_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	username varchar(255),
-	password_hash varchar(255)
+	UserId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	Username varchar(255),
+	PasswordHash varchar(255)
 );
 
 CREATE TABLE Reviews(
-	review_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	critic_id int,
-	foreign key (critic_id) references Users(user_id),
-	review_description varchar(255),
-	rating int
+	ReviewId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	CriticId int,
+	foreign key (CriticId) references Users(UserId),
+	ReviewDescription varchar(255),
+	Rating int
 );
 
 CREATE TABLE People(
-	people_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	first_name varchar(255),
-	last_name varchar(255)
+	PersonId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	FirstName varchar(255),
+	LastName varchar(255)
 );
 
 CREATE TABLE Genres(
-	genre_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	name varchar(255)
+	GenreId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	Name varchar(255)
 );
 
 CREATE TABLE Carts(
-	cart_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	user_id int,
-	foreign key (user_id) references Users(user_id)
+	CartId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	UserId int,
+	foreign key (UserId) references Users(UserId)
 );
 
 CREATE TABLE Orders(
-	order_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	cart_id int,
-	foreign key (cart_id) references Carts(cart_id),
-	movie_id int,
-	foreign key (movie_id) references Movies(movie_id)
+	OrderId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	CartId int,
+	foreign key (CartId) references Carts(CartId),
+	MovieId int,
+	foreign key (MovieId) references Movies(MovieId)
 );
 
 CREATE TABLE MovieSales(
-	movie_sale_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	sale_id int,
-	foreign key (sale_id) references Sales(sale_id),
-	movie_id int,
-	foreign key (movie_id) references Movies(movie_id)
+	MovieSaleId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	SaleId int,
+	foreign key (SaleId) references Sales(SaleId),
+	MovieId int,
+	foreign key (MovieId) references Movies(MovieId)
 );
 
 CREATE TABLE MovieGenres(
-	movie_genre_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	movie_id int,
-	foreign key (movie_id) references Movies(movie_id),
-	genre_id int,
-	foreign key (genre_id) references Genres(genre_id)
+	MovieGenreId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	MovieId int,
+	foreign key (MovieId) references Movies(MovieId),
+	GenreId int,
+	foreign key (GenreId) references Genres(GenreId)
 );
 
 CREATE TABLE MoviePeople(
-	movie_people_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	movie_id int,
-	foreign key (movie_id) references Movies(movie_id),
-	people_id int,
-	foreign key (people_id) references People(people_id)
+	MoviePersonId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	MovieId int,
+	foreign key (MovieId) references Movies(MovieId),
+	PersonId int,
+	foreign key (PersonId) references People(PersonId)
 );
 
 CREATE TABLE MovieReview(
-	movie_review_id int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
-	movie_id int,
-	foreign key (movie_id) references Movies(movie_id),
-	review_id int,
-	foreign key (review_id) references Reviews(review_id)
-);
+	MovieReviewId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
+	MovieId int,
+	foreign key (MovieId) references Movies(MovieId),
+	ReviewId int,
+	foreign key (ReviewId) references Reviews(ReviewId)
+); 

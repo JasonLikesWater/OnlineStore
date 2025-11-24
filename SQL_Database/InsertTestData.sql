@@ -1,129 +1,93 @@
-﻿INSERT INTO People (first_name, last_name) VALUES
-('Christopher', 'Nolan'),
-('Greta', 'Gerwig'),
-('Quentin', 'Tarantino'),
-('Patty', 'Jenkins'),
-('James', 'Cameron'),
-('Martin', 'Scorsese'),
-('Jordan', 'Peele'),
-('Ridley', 'Scott'),
-('Sofia', 'Coppola'),
-('Chloé', 'Zhao');
+﻿INSERT INTO Movies (Title, DirectorId, Studio, Rating, Sku, Price, Weight, Dimensions, Description, CoverImage, ReleaseDate)
+VALUES
+('Inception', 1, 'Warner Bros', 9, 'SKU000001', 14.99, 0.5, '7x5', 'A mind-bending thriller.', 'inception.jpg', '2010-07-16'),
+('The Matrix', 2, 'Warner Bros', 10, 'SKU000002', 12.99, 0.45, '7x5', 'Sci-fi action classic.', 'matrix.jpg', '1999-03-31'),
+('Interstellar', 1, 'Paramount', 9, 'SKU000003', 16.99, 0.55, '7x5', 'A journey through space and time.', 'interstellar.jpg', '2014-11-07'),
+('I Like Water', 3, 'JasonCo', 10, 'SKU000004', 100.99, 0.4, '7x5', '90 minute monoglue about Jason Liking Water', 'water.jpg', '2025-10-23')
 
-INSERT INTO Genres (name) VALUES
+INSERT INTO Users (Username, PasswordHash)
+VALUES
+('critic_john', 'hash1'),
+('critic_sarah', 'hash2'),
+('critic_mike', 'hash3');
+
+INSERT INTO People (FirstName, LastName)
+VALUES
+('Christopher', 'Nolan'),
+('Lana', 'Wachowski'),
+('Keanu', 'Reeves'),
+('Leonardo', 'DiCaprio'),
+('Matthew', 'McConaughey');
+
+INSERT INTO Genres (Name)
+VALUES
 ('Action'),
-('Drama'),
-('Comedy'),
 ('Sci-Fi'),
 ('Thriller'),
-('Horror'),
-('Romance'),
-('Adventure'),
-('Crime'),
-('Fantasy');
+('Drama'),
+('Adventure');
 
-INSERT INTO Movies (title, director_id, studio, genre, rating, sku, price, weight, dimensions, description, cover_image, release_date) VALUES
-('Inception', 1, 'Warner Bros', 'Sci-Fi', 9, 'SKU100001', 14.99, 0.2, '7x5x1', 'A thief enters dreams to steal secrets.', 'inception.jpg', '2010-07-16'),
-('Barbie', 2, 'Warner Bros', 'Comedy', 8, 'SKU100002', 19.99, 0.25, '7x5x1', 'Barbie discovers her true self.', 'barbie.jpg', '2023-07-21'),
-('Pulp Fiction', 3, 'Miramax', 'Crime', 10, 'SKU100003', 12.49, 0.22, '7x5x1', 'Crime stories collide in LA.', 'pulpfiction.jpg', '1994-10-14'),
-('Wonder Woman', 4, 'DC Films', 'Action', 8, 'SKU100004', 13.99, 0.21, '7x5x1', 'Diana becomes a hero during WWI.', 'wonderwoman.jpg', '2017-06-02'),
-('Avatar', 5, '20th Century Fox', 'Sci-Fi', 9, 'SKU100005', 16.99, 0.3, '7x5x1', 'A soldier joins a new world.', 'avatar.jpg', '2009-12-18'),
-('The Irishman', 6, 'Netflix', 'Drama', 9, 'SKU100006', 17.49, 0.24, '7x5x1', 'Hitman recounts his past.', 'irishman.jpg', '2019-11-01'),
-('Get Out', 7, 'Universal', 'Horror', 9, 'SKU100007', 15.99, 0.2, '7x5x1', 'A man uncovers a dark secret.', 'getout.jpg', '2017-02-24'),
-('Gladiator', 8, 'DreamWorks', 'Action', 10, 'SKU100008', 14.49, 0.23, '7x5x1', 'General seeks revenge in Rome.', 'gladiator.jpg', '2000-05-05'),
-('Lost in Translation', 9, 'Focus Features', 'Romance', 8, 'SKU100009', 11.99, 0.19, '7x5x1', 'Two strangers connect in Tokyo.', 'losttranslation.jpg', '2003-09-12'),
-('Nomadland', 10, 'Searchlight', 'Drama', 8, 'SKU100010', 13.49, 0.18, '7x5x1', 'A woman travels the American West.', 'nomadland.jpg', '2020-12-04');
+INSERT INTO Reviews (CriticId, ReviewDescription, Rating)
+VALUES
+(1, 'Amazing visuals and storytelling.', 9),
+(2, 'Revolutionary sci-fi experience.', 10),
+(3, 'Deep and emotional film.', 9);
 
-INSERT INTO Users (username, password_hash) VALUES
-('cinefan01', 'hash123'),
-('criticmaster', 'hash234'),
-('movielover', 'hash345'),
-('popcornpro', 'hash456'),
-('filmnerd', 'hash567'),
-('useralpha', 'hash678'),
-('betauser', 'hash789'),
-('gammawatcher', 'hash890'),
-('reviewking', 'hash901'),
-('theaterbuff', 'hash012');
+INSERT INTO Carts (UserId)
+VALUES
+(1), (2), (3);
 
-INSERT INTO Reviews (critic_id, review_description, rating) VALUES
-(1, 'Amazing visuals and story.', 10),
-(2, 'Fun and entertaining.', 8),
-(3, 'A modern classic.', 10),
-(4, 'Great action scenes.', 9),
-(5, 'Beautiful world building.', 9),
-(6, 'A bit long but great.', 8),
-(7, 'Creepy and smart.', 9),
-(8, 'Epic and emotional.', 10),
-(9, 'Touching and heartfelt.', 8),
-(10, 'Deep and reflective.', 8);
+INSERT INTO Orders (CartId, MovieId)
+VALUES
+(1, 1),   -- John buys Inception
+(2, 2),   -- Sarah buys The Matrix
+(3, 3);   -- Mike buys Interstellar
 
-INSERT INTO MovieReview (movie_id, review_id) VALUES
+INSERT INTO Sales (Discount, StartDate, EndDate, Category)
+VALUES
+(10, '2024-01-01', '2024-01-10', 'Action Movies'),
+(5, '2024-02-01', '2024-02-28', 'Sci-Fi');
+
+-- Inception = Action, Sci-Fi, Thriller
+INSERT INTO MovieGenres (MovieId, GenreId)
+VALUES
 (1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8),
-(9, 9),
-(10, 10);
+(1, 2),
+(1, 3);
 
-INSERT INTO MovieGenres (movie_id, genre_id) VALUES
-(1, 4),  -- Inception → Sci-Fi
-(1, 5),  -- + Thriller
-(2, 3),  -- Barbie → Comedy
-(3, 9),  -- Crime
-(3, 5),  -- Thriller
-(4, 1),  -- Action
-(5, 4),  -- Sci-Fi
-(6, 2),  -- Drama
-(7, 6),  -- Horror
-(8, 1),  -- Action
-(9, 7),  -- Romance
-(10, 2); -- Drama
+-- The Matrix = Action, Sci-Fi
+INSERT INTO MovieGenres (MovieId, GenreId)
+VALUES
+(2, 1),
+(2, 2);
 
-INSERT INTO MoviePeople (movie_id, people_id) VALUES
-(1, 1),  -- Nolan
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8),
-(9, 9),
-(10, 10);
+-- Interstellar = Sci-Fi, Drama, Adventure
+INSERT INTO MovieGenres (MovieId, GenreId)
+VALUES
+(3, 2),
+(3, 4),
+(3, 5);
 
-INSERT INTO Sales (discount, start_date, end_date, category) VALUES
-(0.10, '2025-01-01', '2025-01-31', 'Sci-Fi'),
-(0.20, '2025-02-01', '2025-02-14', 'Romance'),
-(0.15, '2025-03-01', '2025-03-15', 'Action'),
-(0.30, '2025-04-01', '2025-04-10', 'Drama'),
-(0.25, '2025-05-01', '2025-05-07', 'Horror');
+-- Inception (Directed by Nolan, Starring DiCaprio)
+INSERT INTO MoviePeople (MovieId, PersonId)
+VALUES
+(1, 1),  -- Nolan (director)
+(1, 4);  -- Leonardo DiCaprio
 
-INSERT INTO MovieSales (movie_id, sale_id) VALUES
-(1, 1),
-(5, 1),
-(9, 2),
-(4, 3),
-(8, 3),
-(6, 4),
-(7, 5);
+-- The Matrix (Directed by Wachowski, Starring Keanu)
+INSERT INTO MoviePeople (MovieId, PersonId)
+VALUES
+(2, 2),  -- Wachowski
+(2, 3);  -- Keanu Reeves
 
-INSERT INTO Carts (user_id) VALUES
-(1),
-(2),
-(3),
-(4),
-(5);
+-- Interstellar (Directed by Nolan, Starring McConaughey)
+INSERT INTO MoviePeople (MovieId, PersonId)
+VALUES
+(3, 1),  -- Nolan again
+(3, 5);  -- McConaughey
 
-INSERT INTO Orders (cart_id, movie_id) VALUES
-(1, 1),
-(1, 3),
-(2, 2),
-(3, 7),
-(4, 4),
-(4, 5),
-(5, 10);
+INSERT INTO MovieReview (MovieId, ReviewId)
+VALUES
+(1, 1),  -- Inception gets review #1
+(2, 2),  -- Matrix gets review #2
+(3, 3);  -- Interstellar gets review #3
