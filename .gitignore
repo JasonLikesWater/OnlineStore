@@ -32,6 +32,8 @@ _ReSharper*/
 # Build outputs
 bin/
 obj/
+**/bin/
+**/obj/
 *.dll
 *.exe
 *.pdb
@@ -40,7 +42,7 @@ obj/
 *.user
 *.suo
 .vs/
-*.vscode/
+.vscode/
 *.dbmdl
 *.cache
 *.dswa.json
@@ -59,6 +61,9 @@ project.nuget.cache
 *.runtime.json
 *.build.json
 *.build.json.cache
+*.assets.cache
+*.GlobalUsings.g.cs
+*csproj.nuget.dgspec.json
 
 # Backup / temp files
 *.backup.json
