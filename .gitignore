@@ -1,0 +1,12 @@
+# Ignore general system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment and sensitive configs (if added later)
+.env
+
+# Logs
+*.log
+
+# Node modules anywhere in the repo
+node_modules/

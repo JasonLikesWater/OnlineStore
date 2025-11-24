@@ -1,0 +1,3 @@
+follow this video to learn how to work on this: https://youtu.be/SqcY0GlETPk?si=GOj_lUF0yC4YxHaS
+
+Bootstrap is a helpful library with many pieces that could be used for this project
