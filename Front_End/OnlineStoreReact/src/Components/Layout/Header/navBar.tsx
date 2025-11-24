@@ -6,7 +6,7 @@ function NavBar() {
   return (
     <nav
       className="navbar navbar-expand-lg" // Added navbar-expand-lg for better responsiveness
-      style={{ backgroundColor: "#9a2672ff" }}
+      style={{ backgroundColor: "#ffffffff" }}
       data-bs-theme="light"
     >
       <div className="container-fluid">
