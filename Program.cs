@@ -1,18 +1,23 @@
-﻿using Online_Store.Repository;
+﻿using Microsoft.Extensions.Configuration;
+using Online_Store.Repository;
 using Online_Store;
+using Online_Store.Models;
 
 class Program
 {
     static void Main()
     {
-        string connString = @"Data Source=localhost;Initial Catalog=master;User ID=sa;Password=TempP4ssw0rd";
-        MovieRepository repo = new MovieRepository(connString);
 
-        var movies = repo.GetTopMovies(4);
+        var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("SQL_Database/Data/appsettings.json", optional: false).Build();
 
-        foreach (var m in movies)
-        {
-            Console.WriteLine($"{m.MovieId}: {m.Title} ({m.ReleaseDate}) - ${m.Price}");
-        }
+        string connString = config.GetConnectionString("DefaultConnection");
+
+        UserRepository repo = new UserRepository(connString);
+
+        User order = repo.GetUserById(1);
+
+        //foreach (Sale x in order){
+        Console.WriteLine($"{order.UserId}: {order.Username} {order.PasswordHash}");
+        //}
     }
 }

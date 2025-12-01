@@ -2,9 +2,9 @@ namespace Online_Store.Models
 {
     public class Order
     {
-        private int OrderId {get;}
-        private int CartId {get;}
-        private int MovieId {get;}
+        public int OrderId {get;}
+        public int CartId {get;}
+        public int MovieId {get;}
         public Order(int OrderId, int CartId, int MovieId)
         {
             this.OrderId = OrderId;
