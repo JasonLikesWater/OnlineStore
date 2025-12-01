@@ -8,7 +8,7 @@ namespace Online_Store
         public static void TestDatabaseConnection()
         {
             Console.WriteLine("Connecting");
-            string connString = @"Data Source=localhost;Initial Catalog=master;User ID=sa;Password=TempP4ssw0rd";
+            String connString = "";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 try

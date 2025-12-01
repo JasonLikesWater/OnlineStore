@@ -2,9 +2,9 @@ namespace Online_Store.Models
 {
     public class User
     {
-        private int UserId;
-        private string Username;
-        private string PasswordHash;
+        public int UserId {get;}
+        public string Username {get;}
+        public string PasswordHash {get;}
     public User(int UserId, string Username, string PasswordHash)
         {
             this.UserId = UserId;
