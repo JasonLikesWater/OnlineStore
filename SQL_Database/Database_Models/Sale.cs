@@ -2,11 +2,11 @@ namespace Online_Store.Models
 {
     public class Sale
     {
-        private int SaleId { get; }
-        private double Discount { get;}
-        private string StartDate { get; }
-        private string EndDate {get;}
-        private string Category {get;}
+        public int SaleId { get; }
+        public double Discount { get;}
+        public string StartDate { get; }
+        public string EndDate {get;}
+        public string Category {get;}
 
 
         public Sale(int SaleId, double Discount, string StartDate, string EndDate, string Category)
