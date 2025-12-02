@@ -1,0 +1,70 @@
+
+# Ignore general system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment and sensitive configs (if added later)
+.env
+
+# Logs
+*.log
+
+# Node modules anywhere in the repo
+node_modules/
+
+# User-specific files
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folders
+.vs/
+_ReSharper*/
+*.DotSettings.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Database files
+*.mdf
+*.ldf
+
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+
+# User and workspace files
+*.user
+*.suo
+.vs/
+.vscode/
+*.dbmdl
+*.cache
+*.dswa.json
+*.vsidx
+*.futdcache.v2
+*.metadata.v9.bin
+*.projects.v9.bin
+*.string.v9.bin
+*.sourcelink.json
+
+# NuGet / project system
+project.assets.json
+project.nuget.cache
+*.nuget.g.props
+*.endpoints.json
+*.runtime.json
+*.build.json
+*.build.json.cache
+*.assets.cache
+*.GlobalUsings.g.cs
+*csproj.nuget.dgspec.json
+
+# Backup / temp files
+*.backup.json
