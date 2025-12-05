@@ -60,4 +60,94 @@ router.get('/:id/movies', async (req, res) => {
   }
 });
 
+/**
+ * Create a new person.
+ *
+ * Required fields:
+ *  FirstName, LastName
+ *
+ * POST /api/people
+ */
+router.post('/', async (req, res) => {
+  const { FirstName, LastName } = req.body;
+  const required = [FirstName, LastName];
+  if (required.some(field => field === undefined)) {
+  return res.status(400).json({ error: "Missing required fields" });
+}
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input("FirstName", FirstName)
+      .input("LastName", LastName)
+      .query(`INSERT INTO People (FirstName, LastName) OUTPUT INSERTED.* VALUES (@FirstName, @LastName)`);
+    res.status(201).json(result.recordset[0]);
+  } catch (err) {
+    console.error("Error inserting person:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * Update an existing person.
+ *
+ * All fields are optional, any field not provided will not be changed.
+ *
+ * PUT /api/people/:id
+ */
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updates = {};
+  for (const [key, value] of Object.entries(req.body)) {
+    if (value !== undefined) {
+      updates[key] = value;
+    }
+  }
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: "No fields provided to update" });
+  }
+  const setClauses = Object.keys(updates)
+    .map(field => `${field} = @${field}`)
+    .join(", ");
+  const query = `UPDATE People SET ${setClauses} WHERE PersonId = @PersonId`;
+  try {
+    const pool = await getPool();
+    const request = pool.request().input("PersonId", id);
+    for (const [key, value] of Object.entries(updates)) {
+      request.input(key, value);
+    }
+    await request.query(query);
+    res.json({ message: "Person updated successfully" });
+  } catch (error) {
+    console.error("Error updating person:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * Delete a person and all related records.
+ *
+ * This will remove:
+ *  MoviePeople links
+ *  The person itself
+ * 
+ * DELETE /api/people/:id
+ */
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM People WHERE PersonId = @PersonId`;
+  try {
+    const pool = await getPool();
+    await pool.request()
+      .input('PersonId', id)
+      .query(`DELETE FROM MoviePeople WHERE PersonId = @PersonId`);
+    await pool.request()
+      .input('PersonId', id)
+      .query(query);
+    res.json({ message: "Person deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting person:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;

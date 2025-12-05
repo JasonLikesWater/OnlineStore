@@ -91,3 +91,17 @@ VALUES
 (1, 1),  -- Inception gets review #1
 (2, 2),  -- Matrix gets review #2
 (3, 3);  -- Interstellar gets review #3
+
+-- Sale 1 applies to Action Movies
+INSERT INTO MovieSales (SaleId, MovieId)
+VALUES
+(1, 1),  -- Inception is on sale (Action)
+(1, 2);  -- The Matrix is on sale (Action)
+
+-- Sale 2 applies to Sci-Fi Movies
+INSERT INTO MovieSales (SaleId, MovieId)
+VALUES
+(2, 1),  -- Inception is on sale (Sci-Fi)
+(2, 2),  -- The Matrix is on sale (Sci-Fi)
+(2, 3);  -- Interstellar is on sale (Sci-Fi)
+
