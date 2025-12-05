@@ -1,5 +1,5 @@
 import logo from "./logo.png";
-import { FaShoppingCart, FaUserCircle } from "react-icons/fa"; // Added FaUserCircle for Login
+import { FaShoppingCart, FaUserCircle, FaSearch } from "react-icons/fa"; // Imported FaSearch icon
 import { Link } from "react-router-dom";
 
 function NavBar() {
@@ -19,6 +19,7 @@ function NavBar() {
         </Link>
 
         {/* Links Group (Text/Tertiary Buttons) */}
+        {/* me-auto pushes this group to the left and the next group to the right */}
         <div className="d-flex align-items-center me-auto">
           <Link
             to="/"
@@ -45,25 +46,42 @@ function NavBar() {
           </Link>
         </div>
 
-        {/* Buttons Group */}
-        <div className="d-flex">
+        {/* Buttons Group (Includes the new Search Bar) */}
+        <div className="d-flex align-items-center">
+          {/* 🔍 NEW SEARCH BAR 🔍 */}
+          <div className="input-group me-3" style={{ width: "250px" }}>
+            <input
+              type="text"
+              className="form-control form-control-sm" // Use form-control-sm for smaller height
+              placeholder="Search products..."
+              aria-label="Search products"
+              aria-describedby="button-addon2"
+            />
+            <button
+              className="btn btn-outline-light btn-sm"
+              type="button"
+              id="button-addon2"
+            >
+              <FaSearch />
+            </button>
+          </div>
+          {/* ------------------- */}
+
           {/* Login Button (Secondary/Outline Style) */}
-          {/* Applied btn-outline-light class directly to the Link for clean ghost button look */}
           <Link
             to="/Pages/loginPage"
-            className="btn btn-sm btn-outline-light me-2 d-flex align-items-center" // Used btn-sm for smaller button
-            style={{ borderRadius: "5px" }} // Added slight rounding
+            className="btn btn-sm btn-outline-light me-2 d-flex align-items-center"
+            style={{ borderRadius: "5px" }}
           >
-            <FaUserCircle className="me-1" /> {/* Icon for visual clarity */}
+            <FaUserCircle className="me-1" />
             Login
           </Link>
 
           {/* Cart Button (Primary/Solid Style - Main CTA) */}
-          {/* Applied btn-success class directly to the Link for solid primary button */}
           <Link
             to="/Pages/cartPage"
-            className="btn btn-sm btn-success d-flex align-items-center" // Used a contrasting color (green/success)
-            style={{ borderColor: "white", borderRadius: "5px" }} // Added slight rounding
+            className="btn btn-sm btn-success d-flex align-items-center"
+            style={{ borderColor: "white", borderRadius: "5px" }}
           >
             <FaShoppingCart className="me-1" />
             Cart
