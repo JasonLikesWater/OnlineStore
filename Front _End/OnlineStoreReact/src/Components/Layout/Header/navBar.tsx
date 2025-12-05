@@ -1,26 +1,32 @@
 import jason from "./react.svg";
 import { FaShoppingCart } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function NavBar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <>
-        <a className="navbar-brand" href="#">
-          <img src={jason} width="50" height="30"></img>
+        {/* Logo + Link to Home */}
+        <Link className="navbar-brand" to="/">
+          <img src={jason} width="50" height="30" alt="logo" />
           MOVIEHUB
-        </a>
+        </Link>
 
         <div className="container-fluid">
-          <a className="navbar-brand"></a>
-          <form className="d-flex" role="search">
-            <button className="btn btn-outline-primary " type="submit">
+          <div className="d-flex" role="navigation">
+
+            {/* Login Button — update route later if needed */}
+            <Link to="/login" className="btn btn-outline-primary me-2">
               Login
-            </button>
-            <button className="btn btn-putline-primary " type="submit">
-              <FaShoppingCart style={{ color: "green" }} />
+            </Link>
+
+            {/* Cart Button */}
+            <Link to="/cart" className="btn btn-outline-primary">
+              <FaShoppingCart style={{ color: "green", marginRight: 5 }} />
               Cart
-            </button>
-          </form>
+            </Link>
+
+          </div>
         </div>
       </>
     </nav>
