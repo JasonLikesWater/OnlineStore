@@ -60,6 +60,33 @@ router.get('/:id/genres', async (req, res) => {
   }
 });
 
+
+
+/**
+ * GET everything about a movie
+ * /api/movies/:id/everything 
+ */
+router.get('/:id/everything', async (req, res) => {
+  const movieId = req.params.id;
+  const query = `SELECT M.Title, M.Sku, M.Price, M.Rating AS Movie_Rating, M.ReleaseDate, M.Description, M.CoverImage, P.FirstName AS Director_FirstName, P.LastName AS Director_LastName, G_Main.Name AS Main_Genre, U.Username AS Critic_Username, R.Rating AS Review_Score, R.ReviewDescription, S.Discount AS Current_Sale_Discount, S.Category AS Sale_Category FROM Movies AS M LEFT JOIN People AS P ON M.DirectorId = P.PersonId LEFT JOIN Genres AS G_Main ON M.GenreId = G_Main.GenreId LEFT JOIN MovieReview AS MR ON M.MovieId = MR.MovieId LEFT JOIN Reviews AS R ON MR.ReviewId = R.ReviewId LEFT JOIN Users AS U ON R.CriticId = U.UserId LEFT JOIN MovieSales AS MS ON M.MovieId = MS.MovieId LEFT JOIN Sales AS S ON MS.SaleId = S.SaleId WHERE M.MovieId = @MovieId`;
+  try {
+    const pool = await getPool();
+    const result = await pool
+      .request()
+      .input('MovieId', movieId)
+      .query(query);
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Error fetching movie people:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
+
+
 /**
  * GET the people in a specific movie
  * /api/movies/:id/people 

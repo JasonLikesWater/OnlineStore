@@ -1,9 +1,9 @@
 ﻿INSERT INTO Movies (Title, DirectorId, Studio, GenreId, Rating, Sku, Price, Weight, Dimensions, Description, CoverImage, ReleaseDate)
 VALUES
-('Inception', 1, 'Warner Bros', 1, 9, 'SKU000001', 14.99, 0.5, '7x5', 'A mind-bending thriller.', 'inception.jpg', '2010-07-16'),
-('The Matrix', 2, 'Warner Bros', 1, 10, 'SKU000002', 12.99, 0.45, '7x5', 'Sci-fi action classic.', 'matrix.jpg', '1999-03-31'),
-('Interstellar', 1, 'Paramount', 2, 9, 'SKU000003', 16.99, 0.55, '7x5', 'A journey through space and time.', 'interstellar.jpg', '2014-11-07'),
-('I Like Water', 3, 'JasonCo', 4, 10, 'SKU000004', 100.99, 0.4, '7x5', '90 minute monoglue about Jason Liking Water', 'water.jpg', '2025-10-23')
+('Inception', 1, 'Warner Bros', 1, 9, 'SKU000001', 14.99, 0.5, '7x5', 'A mind-bending thriller.', 'https://m.media-amazon.com/images/M/MV5BZjhkNjM0ZTMtNGM5MC00ZTQ3LTk3YmYtZTkzYzdiNWE0ZTA2XkEyXkFqcGc@._V1_.jpg', '2010-07-16'),
+('The Matrix', 2, 'Warner Bros', 1, 10, 'SKU000002', 12.99, 0.45, '7x5', 'Sci-fi action classic.', 'https://upload.wikimedia.org/wikipedia/en/d/db/The_Matrix.png', '1999-03-31'),
+('Interstellar', 1, 'Paramount', 2, 9, 'SKU000003', 16.99, 0.55, '7x5', 'A journey through space and time.', 'https://m.media-amazon.com/images/I/91UMpWgj05L._AC_UF1000,1000_QL80_.jpg', '2014-11-07'),
+('I Like Water', 3, 'JasonCo', 4, 6, 'SKU000004', 100.99, 0.4, '7x5', '90 minute monoglue about Jason Liking Water', 'https://media.licdn.com/dms/image/v2/D5603AQGR90Ffh9WNkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1728511574950?e=2147483647&v=beta&t=rC2cAOODqHIyJbYNnty4BGYN8Hjq91It9H9F5-HCC9I', '2025-10-23');
 
 INSERT INTO Users (Username, PasswordHash)
 VALUES
