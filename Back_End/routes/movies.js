@@ -60,8 +60,6 @@ router.get('/:id/genres', async (req, res) => {
   }
 });
 
-
-
 /**
  * GET everything about a movie
  * /api/movies/:id/everything 
@@ -81,11 +79,6 @@ router.get('/:id/everything', async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
-
-
 
 /**
  * GET the people in a specific movie
@@ -124,6 +117,143 @@ router.get('/:id/reviews', async (req, res) => {
   } catch (error) {
     console.error("Error fetching movie reviews:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * Create a new movie.
+ *
+ * Required fields:
+ *  Title, DirectorId, Studio, GenreId, Rating, Sku, Price,
+ *  Weight, Dimensions, Description, CoverImage, ReleaseDate
+ *
+ * POST /api/movies
+ */
+router.post('/', async (req, res) => {
+  const { Title, DirectorId, Studio, GenreId, Rating, Sku, Price, Weight, Dimensions, Description, CoverImage, ReleaseDate } = req.body;
+  const required = [
+  Title,
+  DirectorId,
+  Studio,
+  GenreId,
+  Rating,
+  Sku,
+  Price,
+  Weight,
+  Dimensions,
+  Description,
+  CoverImage,
+  ReleaseDate
+];
+if (required.some(field => field === undefined)) {
+  return res.status(400).json({ error: "Missing required fields" });
+}
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('Title', Title)
+      .input('DirectorId', DirectorId)
+      .input('Studio', Studio)
+      .input('GenreId', GenreId)
+      .input('Rating', Rating)
+      .input('Sku', Sku)
+      .input('Price', Price)
+      .input('Weight', Weight)
+      .input('Dimensions', Dimensions)
+      .input('Description', Description)
+      .input('CoverImage', CoverImage)
+      .input('ReleaseDate', ReleaseDate)
+      .query(`INSERT INTO Movies (Title, DirectorId, Studio, GenreId, Rating, Sku, Price, Weight, Dimensions, Description, CoverImage, ReleaseDate) OUTPUT INSERTED.* VALUES (@Title, @DirectorId, @Studio, @GenreId, @Rating, @Sku, @Price, @Weight, @Dimensions, @Description, @CoverImage, @ReleaseDate)`);
+    res.status(201).json(result.recordset[0]);
+  } catch (err) {
+    console.error("Error inserting movie:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * Update an existing movie.
+ *
+ * All fields are optional, any field not provided will not be changed.
+ *
+ * PUT /api/movies/:id
+ */
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updates = {};
+  for (const [key, value] of Object.entries(req.body)) {
+    if (value !== undefined) {
+      updates[key] = value;
+    }
+  }
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: "No fields provided to update" });
+  }
+  const setClauses = Object.keys(updates)
+    .map(field => `${field} = @${field}`)
+    .join(", ");
+  const query = `UPDATE Movies SET ${setClauses} WHERE MovieId = @MovieId`;
+  try {
+    const pool = await getPool();
+    const request = pool.request().input("MovieId", id);
+    for (const [key, value] of Object.entries(updates)) {
+      request.input(key, value);
+    }
+    await request.query(query);
+    res.json({ message: "Movie updated successfully" });
+  } catch (error) {
+    console.error("Error updating movie:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * Delete a movie and all related records.
+ *
+ * This will remove:
+ *  MovieGenres links
+ *  MoviePeople links
+ *  MovieSales entries
+ *  Reviews via MovieReview
+ *  Orders containing this movie
+ *  The movie itself
+ * 
+ * DELETE /api/movies/:id
+ */
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const pool = await getPool();
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM Orders WHERE MovieId = @MovieId");
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM MovieSales WHERE MovieId = @MovieId");
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM MovieGenres WHERE MovieId = @MovieId");
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM MoviePeople WHERE MovieId = @MovieId");
+    const reviews = await pool.request()
+      .input("MovieId", id)
+      .query("SELECT ReviewId FROM MovieReview WHERE MovieId = @MovieId");
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM MovieReview WHERE MovieId = @MovieId");
+    for (const r of reviews.recordset) {
+      await pool.request()
+        .input("ReviewId", r.ReviewId)
+        .query("DELETE FROM Reviews WHERE ReviewId = @ReviewId");
+    }
+    await pool.request()
+      .input("MovieId", id)
+      .query("DELETE FROM Movies WHERE MovieId = @MovieId");
+    res.json({ message: "Movie and related records deleted" });
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    res.status(500).json({ error: "Failed to delete movie" });
   }
 });
 
