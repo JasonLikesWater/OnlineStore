@@ -1,5 +1,5 @@
 import express from "express";
-import { getPool } from '../db.js';
+import { getPool } from "../db.js";
 
 const router = express.Router();
 
@@ -8,11 +8,11 @@ const router = express.Router();
  * /api/people
  */
 router.get('/', async (req, res) => {
-  try {
+  try{
     const pool = await getPool();
     const result = await pool.request().query("SELECT * FROM People");
     res.json(result.recordset);
-  } catch (err) {
+  }catch(err){
     console.error("Error fetching people:", err);
     res.status(500).json({ error: "Failed to fetch people" });
   }
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
  */ 
 router.get('/:id', async (req, res) => {
   const personId = req.params.id;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: "Person not found" });
     }
     res.json(result.recordset[0]);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching person:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -47,14 +47,14 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/movies', async (req, res) => {
   const personId = req.params.id;
   const query = `SELECT Movies.* FROM MoviePeople JOIN Movies ON MoviePeople.MovieId = Movies.MovieId WHERE MoviePeople.personId = @personId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('PersonId', personId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movies this person is in:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -71,17 +71,17 @@ router.get('/:id/movies', async (req, res) => {
 router.post('/', async (req, res) => {
   const { FirstName, LastName } = req.body;
   const required = [FirstName, LastName];
-  if (required.some(field => field === undefined)) {
-  return res.status(400).json({ error: "Missing required fields" });
-}
-  try {
+  if(required.some(field => field === undefined)){
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+  try{
     const pool = await getPool();
     const result = await pool.request()
       .input("FirstName", FirstName)
       .input("LastName", LastName)
       .query(`INSERT INTO People (FirstName, LastName) OUTPUT INSERTED.* VALUES (@FirstName, @LastName)`);
     res.status(201).json(result.recordset[0]);
-  } catch (err) {
+  }catch(err){
     console.error("Error inserting person:", err);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -96,28 +96,29 @@ router.post('/', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
+  const allowedFields = ["FirstName", "LastName"];
   const updates = {};
-  for (const [key, value] of Object.entries(req.body)) {
-    if (value !== undefined) {
+  for(const [key, value] of Object.entries(req.body)){
+    if((allowedFields.includes(key)) && (value !== undefined)){
       updates[key] = value;
     }
   }
-  if (Object.keys(updates).length === 0) {
+  if(Object.keys(updates).length === 0){
     return res.status(400).json({ error: "No fields provided to update" });
   }
   const setClauses = Object.keys(updates)
     .map(field => `${field} = @${field}`)
     .join(", ");
   const query = `UPDATE People SET ${setClauses} WHERE PersonId = @PersonId`;
-  try {
+  try{
     const pool = await getPool();
     const request = pool.request().input("PersonId", id);
-    for (const [key, value] of Object.entries(updates)) {
+    for(const [key, value] of Object.entries(updates)){
       request.input(key, value);
     }
     await request.query(query);
     res.json({ message: "Person updated successfully" });
-  } catch (error) {
+  }catch(error){
     console.error("Error updating person:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -135,7 +136,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM People WHERE PersonId = @PersonId`;
-  try {
+  try{
     const pool = await getPool();
     await pool.request()
       .input('PersonId', id)
@@ -144,7 +145,7 @@ router.delete('/:id', async (req, res) => {
       .input('PersonId', id)
       .query(query);
     res.json({ message: "Person deleted successfully" });
-  } catch (error) {
+  }catch(error){
     console.error("Error deleting person:", error);
     res.status(500).json({ error: "Internal server error" });
   }

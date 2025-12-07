@@ -1,5 +1,5 @@
-import express from 'express';
-import { getPool } from '../db.js';
+import express from "express";
+import { getPool } from "../db.js";
 
 const router = express.Router();
 
@@ -8,11 +8,11 @@ const router = express.Router();
  * /api/movies
  */
 router.get('/', async (req, res) => {
-  try {
+  try{
     const pool = await getPool();
     const result = await pool.request().query("SELECT * FROM Movies");
     res.json(result.recordset);
-  } catch (err) {
+  }catch (err){
     console.error("Error fetching movies:", err);
     res.status(500).json({ error: "Failed to fetch movies" });
   }
@@ -24,17 +24,17 @@ router.get('/', async (req, res) => {
  */ 
 router.get('/:id', async (req, res) => {
   const movieId = req.params.id;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('MovieId', movieId)
       .query('SELECT * FROM Movies WHERE MovieId = @MovieId');
-    if (result.recordset.length === 0) {
+    if(result.recordset.length === 0){
       return res.status(404).json({ error: "Movie not found" });
     }
     res.json(result.recordset[0]);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movie:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -47,14 +47,14 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/genres', async (req, res) => {
   const movieId = req.params.id;
   const query = `SELECT Genres.GenreId, Genres.Name FROM MovieGenres JOIN Genres ON MovieGenres.GenreId = Genres.GenreId WHERE MovieGenres.MovieId = @MovieId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('MovieId', movieId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movie genres:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -67,14 +67,14 @@ router.get('/:id/genres', async (req, res) => {
 router.get('/:id/everything', async (req, res) => {
   const movieId = req.params.id;
   const query = `SELECT M.Title, M.Sku, M.Price, M.Rating AS Movie_Rating, M.ReleaseDate, M.Description, M.CoverImage, P.FirstName AS Director_FirstName, P.LastName AS Director_LastName, G_Main.Name AS Main_Genre, U.Username AS Critic_Username, R.Rating AS Review_Score, R.ReviewDescription, S.Discount AS Current_Sale_Discount, S.Category AS Sale_Category FROM Movies AS M LEFT JOIN People AS P ON M.DirectorId = P.PersonId LEFT JOIN Genres AS G_Main ON M.GenreId = G_Main.GenreId LEFT JOIN MovieReview AS MR ON M.MovieId = MR.MovieId LEFT JOIN Reviews AS R ON MR.ReviewId = R.ReviewId LEFT JOIN Users AS U ON R.CriticId = U.UserId LEFT JOIN MovieSales AS MS ON M.MovieId = MS.MovieId LEFT JOIN Sales AS S ON MS.SaleId = S.SaleId WHERE M.MovieId = @MovieId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('MovieId', movieId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movie people:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -87,14 +87,14 @@ router.get('/:id/everything', async (req, res) => {
 router.get('/:id/people', async (req, res) => {
   const movieId = req.params.id;
   const query = `SELECT People.PersonId, People.FirstName, People.LastName FROM MoviePeople JOIN People ON MoviePeople.PersonId = People.PersonId WHERE MoviePeople.MovieId = @MovieId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('MovieId', movieId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movie people:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -107,14 +107,14 @@ router.get('/:id/people', async (req, res) => {
 router.get('/:id/reviews', async (req, res) => {
   const movieId = req.params.id;
   const query = `SELECT Reviews.ReviewId, Reviews.ReviewDescription, Reviews.Rating, Reviews.CriticId FROM MovieReview JOIN Reviews ON MovieReview.ReviewId = Reviews.ReviewId WHERE MovieReview.MovieId = @MovieId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('MovieId', movieId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movie reviews:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -145,10 +145,10 @@ router.post('/', async (req, res) => {
   CoverImage,
   ReleaseDate
 ];
-if (required.some(field => field === undefined)) {
+if(required.some(field => field === undefined)){
   return res.status(400).json({ error: "Missing required fields" });
 }
-  try {
+  try{
     const pool = await getPool();
     const result = await pool.request()
       .input('Title', Title)
@@ -165,7 +165,7 @@ if (required.some(field => field === undefined)) {
       .input('ReleaseDate', ReleaseDate)
       .query(`INSERT INTO Movies (Title, DirectorId, Studio, GenreId, Rating, Sku, Price, Weight, Dimensions, Description, CoverImage, ReleaseDate) OUTPUT INSERTED.* VALUES (@Title, @DirectorId, @Studio, @GenreId, @Rating, @Sku, @Price, @Weight, @Dimensions, @Description, @CoverImage, @ReleaseDate)`);
     res.status(201).json(result.recordset[0]);
-  } catch (err) {
+  }catch(err){
     console.error("Error inserting movie:", err);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -180,28 +180,29 @@ if (required.some(field => field === undefined)) {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
+  const allowedFields = ["Title", "DirectorId", "Studio", "GenreId", "Rating", "Sku", "Price", "Weight", "Dimensions", "CoverImage", "ReleaseDate"];
   const updates = {};
-  for (const [key, value] of Object.entries(req.body)) {
-    if (value !== undefined) {
+  for (const [key, value] of Object.entries(req.body)){
+    if((allowedFields.includes(key)) && (value !== undefined)) {
       updates[key] = value;
     }
   }
-  if (Object.keys(updates).length === 0) {
+  if(Object.keys(updates).length === 0){
     return res.status(400).json({ error: "No fields provided to update" });
   }
   const setClauses = Object.keys(updates)
     .map(field => `${field} = @${field}`)
     .join(", ");
   const query = `UPDATE Movies SET ${setClauses} WHERE MovieId = @MovieId`;
-  try {
+  try{
     const pool = await getPool();
     const request = pool.request().input("MovieId", id);
-    for (const [key, value] of Object.entries(updates)) {
+    for(const [key, value] of Object.entries(updates)){
       request.input(key, value);
     }
     await request.query(query);
     res.json({ message: "Movie updated successfully" });
-  } catch (error) {
+  }catch(error){
     console.error("Error updating movie:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -222,7 +223,7 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  try {
+  try{
     const pool = await getPool();
     await pool.request()
       .input("MovieId", id)
@@ -251,7 +252,7 @@ router.delete('/:id', async (req, res) => {
       .input("MovieId", id)
       .query("DELETE FROM Movies WHERE MovieId = @MovieId");
     res.json({ message: "Movie and related records deleted" });
-  } catch (error) {
+  }catch(error){
     console.error("Error deleting movie:", error);
     res.status(500).json({ error: "Failed to delete movie" });
   }

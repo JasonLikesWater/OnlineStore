@@ -1,4 +1,4 @@
-import sql from 'mssql';
+import sql from "mssql";
 
 const config = {
   user: 'sa',
@@ -10,11 +10,11 @@ const config = {
   }
 };
 
-export async function getPool() {
-  try {
+export async function getPool(){
+  try{
     const pool = await sql.connect(config);
     return pool;
-  } catch (err) {
+  }catch(err){
     console.error("DB Connection Error:", err);
     throw err;
   }

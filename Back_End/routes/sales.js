@@ -1,5 +1,5 @@
 import express from "express";
-import { getPool } from '../db.js';
+import { getPool } from "../db.js";
 
 const router = express.Router();
 
@@ -8,11 +8,11 @@ const router = express.Router();
  * /api/sales
  */
 router.get('/', async (req, res) => {
-  try {
+  try{
     const pool = await getPool();
     const result = await pool.request().query("SELECT * FROM Sales");
     res.json(result.recordset);
-  } catch (err) {
+  }catch(err){
     console.error("Error fetching sales:", err);
     res.status(500).json({ error: "Failed to fetch sales" });
   }
@@ -24,17 +24,17 @@ router.get('/', async (req, res) => {
  */ 
 router.get('/:id', async (req, res) => {
   const saleId = req.params.id;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('SaleId', saleId)
       .query('SELECT * FROM Sales WHERE SaleId = @SaleId');
-    if (result.recordset.length === 0) {
+    if(result.recordset.length === 0){
       return res.status(404).json({ error: "Sale not found" });
     }
     res.json(result.recordset[0]);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching sale:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -47,14 +47,14 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/movies', async (req, res) => {
   const saleId = req.params.id;
   const query = `SELECT Movies.* FROM movieSales JOIN Movies ON MovieSales.MovieId = Movies.MovieId WHERE MovieSales.SaleId = @SaleId`;
-  try {
+  try{
     const pool = await getPool();
     const result = await pool
       .request()
       .input('SaleId', saleId)
       .query(query);
     res.json(result.recordset);
-  } catch (error) {
+  }catch(error){
     console.error("Error fetching movies that are a part of this sale:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -71,10 +71,10 @@ router.get('/:id/movies', async (req, res) => {
 router.post('/', async (req, res) => {
   const { Discount, StartDate, EndDate, Category } = req.body;
   const required = [Discount, StartDate, EndDate, Category];
-  if (required.some(field => field === undefined)) {
-  return res.status(400).json({ error: "Missing required fields" });
+  if(required.some(field => field === undefined)){
+    return res.status(400).json({ error: "Missing required fields" });
   }
-  try {
+  try{
     const pool = await getPool();
     const result = await pool.request()
       .input("Discount", Discount)
@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
       .query(`INSERT INTO Sales (Discount, StartDate, EndDate, Category) OUTPUT INSERTED.* VALUES (@Discount, @StartDate, @EndDate, @Category)`);
     res.status(201).json(result.recordset[0]);
 
-  } catch (err) {
+  }catch(err){
     console.error("Error inserting sale:", err);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -99,28 +99,29 @@ router.post('/', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
+  const allowedFields = ["Discount", "StartDate", "EndDate", "Category"];
   const updates = {};
-  for (const [key, value] of Object.entries(req.body)) {
-    if (value !== undefined) {
+  for(const [key, value] of Object.entries(req.body)){
+    if((allowedFields.includes(key)) && (value !== undefined)){
       updates[key] = value;
     }
   }
-  if (Object.keys(updates).length === 0) {
+  if(Object.keys(updates).length === 0){
     return res.status(400).json({ error: "No fields provided to update" });
   }
   const setClauses = Object.keys(updates)
     .map(field => `${field} = @${field}`)
     .join(", ");
   const query = `UPDATE Sales SET ${setClauses} WHERE SaleId = @SaleId`;
-  try {
+  try{
     const pool = await getPool();
     const request = pool.request().input("SaleId", id);
-    for (const [key, value] of Object.entries(updates)) {
+    for(const [key, value] of Object.entries(updates)){
       request.input(key, value);
     }
     await request.query(query);
     res.json({ message: "Sale updated successfully" });
-  } catch (error) {
+  }catch(error){
     console.error("Error updating sale:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -138,14 +139,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM Sales WHERE SaleId = @SaleId`;
-  try {
+  try{
     const pool = await getPool();
     await pool.request()
       .input('SaleId', id)
       .query(`DELETE FROM MovieSales WHERE SaleId = @SaleId`);
     await pool.request().input('SaleId', id).query(query);
     res.json({ message: "Sale deleted successfully" });
-  } catch (error) {
+  }catch(error){
     console.error("Error deleting sale:", error);
     res.status(500).json({ error: "Internal server error" });
   }

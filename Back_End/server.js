@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 
@@ -8,14 +10,12 @@ import reviewsRouter from "./routes/reviews.js";
 import peopleRouter from "./routes/people.js";
 import genresRouter from "./routes/genres.js";
 
-
 const app = express()
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/api", (req, res) => {
-//  res.send("backend is working");
  res.json({ "users": ["userOne", "userTwo", "userThree"]})
 })
 
