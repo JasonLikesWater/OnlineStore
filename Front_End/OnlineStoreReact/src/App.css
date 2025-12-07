@@ -9,7 +9,7 @@ html {
 
 /* Set a clean default font and background */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #000435; /* Bootstrap's light gray background */
     color: #ffffff; /* Bootstrap's dark text color */
     margin: 0;
@@ -459,69 +459,75 @@ body {
 
 /* 2. The Pattern Container: Positions, sizes, and skews all shapes */
 .tile-pattern {
-    overflow: hidden;
-    position: fixed;
-    bottom: -250px; 
-    right: -50px; 
-    width: 500px; 
-    height: 500px;
-    /* CRITICAL: Applies the skew transformation to all child elements */
-    transform: skewX(var(--skew-angle));
-    pointer-events: none; 
-    z-index: 1; /* Sits below content (which should have z-index: 10 or higher) */
+  overflow: hidden;
+  position: absolute;
+  bottom: -120px;     /* ⬆️ moves it UP */
+  right: -30px;      /* slight nudge left */
+  width: 650px;      /* ⬆️ makes it BIGGER */
+  height: 650px;     /* ⬆️ makes it BIGGER */
+  transform: skewX(var(--skew-angle));
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* 3. Base style for Tile 2 (::after) & Tile 3 (.tile-3) */
-.tile-pattern .tile-3, 
-.tile-pattern::after { 
-    content: '';
-    position: fixed;
-    width: var(--tile-width);
-    height: var(--tile-height);
-    
-    /* Gradient for the illuminated effect */
-    background: linear-gradient(
-        315deg,
-        var(--tile-light) 0%,
-        var(--tile-purple) 20%,
-        var(--tile-dark) 100%
-    );
 
-    border-radius: var(--tile-radius);
-    transform: none; /* Inherits skew from parent, no additional transform needed */
+/* 3. Base style for Tile 2 (::after) & Tile 3 (.tile-3) */
+.tile-pattern .tile-3,
+.tile-pattern::after {
+  content: "";
+  position: absolute;          /* was fixed */
+  width: var(--tile-width);
+  height: var(--tile-height);
+
+  background: linear-gradient(
+    315deg,
+    var(--tile-light) 0%,
+    var(--tile-purple) 20%,
+    var(--tile-dark) 100%
+  );
+
+  border-radius: var(--tile-radius);
+  transform: none;
 }
 
 /* Tile 1: Top Left (using ::before) */
 .tile-pattern::before {
-    top: 50px;
-    left: 50px;
-    width: var(--tile-width);
-    height: var(--tile-height);
-    content: '';
+  top: 50px;
+  left: 50px;
+  width: var(--tile-width);
+  height: var(--tile-height);
+  content: "";
 
-    background: linear-gradient(
-        315deg,
-        var(--tile-light) 0%,
-        var(--tile-purple) 20%,
-        var(--tile-dark) 80%
-    );
-    
-    border-radius: var(--tile-radius);
-    position: fixed;
+  background: linear-gradient(
+    315deg,
+    var(--tile-light) 0%,
+    var(--tile-purple) 20%,
+    var(--tile-dark) 80%
+  );
+
+  border-radius: var(--tile-radius);
+  position: absolute;          /* was fixed */
 }
 
 /* Tile 2: Top Right (::after position override) */
 .tile-pattern::after {
-    top: 50px;
-    left: calc(50px + var(--tile-width) + 20px); 
+  top: 50px;
+  left: calc(50px + var(--tile-width) + 20px);
 }
 
 /* Tile 3: Bottom Left (.tile-3 position and size override) */
 .tile-pattern .tile-3 {
-    top: calc(50px + var(--tile-height) + 20px); 
-    left: 50px;
-    width: calc(var(--tile-width) + 100px); 
+  top: calc(50px + var(--tile-height) + 20px);
+  left: 50px;
+  width: calc(var(--tile-width) + 100px);
 }
+
+/* keep hero text above the tiles */
+.hero-section {
+  position: relative;
+  z-index: 2;
+}
+
 
 /* sign up buttons*/
 
@@ -619,4 +625,190 @@ margin-top: 20px;
  margin-bottom: 20px;
  max-width: 800px; /* Example: Keep the content from stretching too wide */
  max-height: 400px;
+}
+
+.hero-section {
+  width: 100%;              /* instead of max-width: 1100px */
+  margin: 0;
+  padding: 80px 80px 120px; /* left padding keeps the text away from the edge */
+  text-align: left;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.6rem;   /* Bigger than before */
+  color: #d6d8ff;
+  margin-top: 8px;
+}
+
+.hero-section h2 {
+  font-size: 2rem;
+  margin-top: 3rem;
+}
+
+/* Center the "Ready to watch?" headline */
+.cta-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 5rem;
+}
+
+/* Make the CTA wrapper full-width so it centers on the whole page */
+.cta-center-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tile graphic in bottom-right */
+.hero-wrapper::after {
+  content: "";
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  /* ✅ correct path + background settings */
+  background-image: url("./assets/tilepattern.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  bottom: -80px;   /* partly off-screen at bottom */
+  right: -120px;   /* off the right edge */
+
+  opacity: 0.35;   /* subtle like the mockup */
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* keep this so the text is above the graphic */
+.hero-section {
+  position: relative;
+  z-index: 10;
+}
+
+/* ==================== LOGIN PAGE ==================== */
+
+.login-page-wrapper {
+  min-height: calc(100vh - 70px); /* adjust if your navbar height differs */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.login-card {
+  background: rgba(5, 10, 60, 0.95);
+  border-radius: 16px;
+  padding: 40px 48px;
+  max-width: 420px;
+  width: 100%;
+  color: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.login-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid #ef4444;
+  color: #fecaca;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-field label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  color: #e5e7eb;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(6, 11, 70, 0.9);
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.login-field input::placeholder {
+  color: #9ca3af;
+}
+
+.login-field input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px #6366f1;
+}
+
+.login-submit-btn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: linear-gradient(120deg, #ec4899, #6366f1);
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.login-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0.96;
+}
+
+.login-secondary-text {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.login-link {
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Mobile tweaks */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 28px 24px;
+    margin: 0 16px;
+  }
 }
