@@ -1,6 +1,8 @@
 import React from "react";
 import "./cartPage.css";
 import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 type CartItem = {
   id: number;
@@ -13,6 +15,7 @@ type CartItem = {
 };
 
 const CartPage: React.FC = () => {
+  const navigate = useNavigate();
   // TODO: replace with real cart data from context / backend
   const items: CartItem[] = [
     {
@@ -98,9 +101,8 @@ const CartPage: React.FC = () => {
             Subtotal: <span>${subtotal.toFixed(2)}</span>
           </div>
           <button
-            type="button"
-            className="btn cart-checkout-btn"
-            onClick={handleApplyPromo}
+            className="checkout-button"
+            onClick={() => navigate("/Pages/checkoutPage")}
           >
             CHECKOUT →
           </button>
