@@ -78,14 +78,16 @@ function NavBar() {
           </Link>
 
           {/* Cart Button (Primary/Solid Style - Main CTA) */}
-          <Link
-            to="/Pages/cartPage"
-            className="btn btn-sm btn-success d-flex align-items-center"
-            style={{ borderColor: "white", borderRadius: "5px" }}
-          >
-            <FaShoppingCart className="me-1" />
-            Cart
-          </Link>
+        <Link
+        to="/Pages/cartPage"
+        className="btn btn-sm btn-outline-light d-flex align-items-center"
+        style={{ borderRadius: "5px" }}
+      >
+        <FaShoppingCart className="me-1" />
+        Cart
+      </Link>
+
+
         </div>
       </div>
     </nav>
