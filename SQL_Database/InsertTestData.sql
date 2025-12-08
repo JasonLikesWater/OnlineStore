@@ -18,19 +18,19 @@ VALUES
 
 INSERT INTO Users (Username, PasswordHash, Email)
 VALUES
-('critic_john', 'hash1', 'johnseena@gmail.com'),
-('critic_sarah', 'hash2', 'sarahrein@thismegacorp.com'),
-('critic_mike', 'hash3', 'mikeshot@gmail.com'),
-('film_buff99', 'hash4', 'dantheman@gmail.com'),
-('spacefan', 'hash5', 'nospacenoface@yahoo.com'),
-('noirlover', 'hash6', 'wind@terrace.com'),
-('action_junkie', 'hash7', 'coolguys@underline.com'),
-('timetraveler', 'hash8', 'lm@backtothepast.com'),
-('explorer101', 'hash9', 'expo@ler.com'),
-('moviequeen', 'hash10', 'kachow@times.com'),
-('popcornmaster', 'hash11', 'poppop@acorn.com'),
-('cinemaguy', 'hash12', 'absolute@martin.com'),
-('epicfilms', 'hash13', 'trailer@screenjunkies.com');
+('critic_john', '$2b$10$3VmzlaKNkS6mYrBWJwfiI.QP6umIngfT/RxLYVJprm3DSo8bG.Uqm', 'johnseena@gmail.com'),
+('critic_sarah', '$2b$10$Nq4QB7SAiKroqtvpUoFSh.Gx3T9LgjR06pHxYJ1l3.Pg2o4BiUX9e', 'sarahrein@thismegacorp.com'),
+('critic_mike', '$2b$10$A1x.Xz1.0vizjkdfK/RJqO5aE/1mx2aKXoAuISTQDCUh9nIogebG6', 'mikeshot@gmail.com'),
+('film_buff99', '$2b$10$im0itwk4oYwDDzRJpUym4.uAeA3dxBsOOgPoPObsCGcjr96mLoJ52', 'dantheman@gmail.com'),
+('spacefan', '$2b$10$dnkw6zQqCpIJ/p52X6Kulug/Yj3tzAynkfMmTHaUXvZsb/.edF3cO', 'nospacenoface@yahoo.com'),
+('noirlover', '$2b$10$Jkg2Vhefhy8H2i3MFUBJUu2edH2kVS1upX1//tW855fGZAdAEB3/C', 'wind@terrace.com'),
+('action_junkie', '$2b$10$GODpCF3QEehE6Sogw/t/oOt836Rnz1Li2chjhLT4ZvljUiXXUw03K', 'coolguys@underline.com'),
+('timetraveler', '$2b$10$lGrmXvlhO21X8sVU09HkP.j0Ac7UtOGXa3aj0q8ZNiYVC5bJ.hxP2', 'lm@backtothepast.com'),
+('explorer101', '$2b$10$o6oyVxvPAInc3luwtfbOX.4udSGdNNlSsE/RAlm5zYOyvlyQ/kKX2', 'expo@ler.com'),
+('moviequeen', '$2b$10$NVHfVtqKSrq24U1o.xaOe.UhK9EjFV.XarDVJUCZHGMoFoHLnpiwu', 'kachow@times.com'),
+('popcornmaster', '$2b$10$j6eKc73Ay2MkxcJEGaFe6uYSRRnI0VWceASprUNdeDoeLgZaYoBp.', 'poppop@acorn.com'),
+('cinemaguy', '$2b$10$hWvItP6sSsLMo7i.fKddCOOcOwqKTte9ujp8asmoh7pGsRXJAd71u', 'absolute@martin.com'),
+('epicfilms', '$2b$10$uXfZg7ggO3jbaGoJk21KIuab5Ni74.iOoudg8j.0Zy8ESXzaS/90S', 'trailer@screenjunkies.com');
 
 INSERT INTO People (FirstName, LastName)
 VALUES
