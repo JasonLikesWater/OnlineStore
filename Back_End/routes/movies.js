@@ -127,4 +127,27 @@ router.get('/:id/reviews', async (req, res) => {
   }
 });
 
+/**
+ * GET a movie using a search string that is like the title of the movie.
+ * /api/movies/:id
+ */ 
+router.get('/:title', async (req, res) => {
+  const title = req.params.title;
+  try {
+    const pool = await getPool();
+    const result = await pool
+      .request()
+      .input('title', sql.varChar, `%${title}%`)
+      .query('SELECT * FROM Movies WHERE Title LIKE @title');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "Movie not found" });
+    }
+    res.json(result.recordset[0]);
+  } catch (error) {
+    console.error("Error fetching movie:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 export default router;
