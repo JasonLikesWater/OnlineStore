@@ -38,7 +38,8 @@ CREATE TABLE Sales(
 CREATE TABLE Users(
 	UserId int NOT NULL IDENTITY(1, 1) PRIMARY KEY,
 	Username varchar(255),
-	PasswordHash varchar(255)
+	PasswordHash varchar(255),
+	Email varchar(40)
 );
 
 CREATE TABLE Reviews(
