@@ -138,7 +138,9 @@ router.get('/:title', async (req, res) => {
     res.json(result.recordset[0]);
   } catch (error) {
     console.error("Error fetching movie:", error);
- * Create a new movie.
+  }
+});
+ /* Create a new movie.
  *
  * Required fields:
  *  Title, DirectorId, Studio, GenreId, Rating, Sku, Price,
