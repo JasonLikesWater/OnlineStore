@@ -1,0 +1,130 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { type Movie } from "../../interfaces.ts";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { Link } from "react-router-dom";
+
+const API_URL = "http://localhost:5000/api/movies";
+
+function DetailsPage() {
+  // State Initialization
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Data Fetching Hook
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        // Axios makes the GET request and ensures the response data matches Movie[]
+        const response = await axios.get<Movie[]>(API_URL);
+
+        setMovies(response.data);
+        setLoading(false);
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.message) {
+          setError(`Failed to fetch movies: ${err.message}.`);
+        } else {
+          setError("An unknown network error occurred.");
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  //  Conditional Rendering (Loading/Error States) ---
+
+  if (loading) {
+    return (
+      <div className="container mt-5">
+        <h2>Loading Movie Inventory...</h2>
+        <p>Fetching data from the Node.js backend...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5 alert alert-danger">
+        <h2>Error Connecting to Server</h2>
+        <p>{error}</p>
+        <p>
+          **Troubleshooting Tip:** Ensure your Node.js server is running on the
+          correct port (e.g., 5000) and the route (`/api/movies`) is available.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <div className="tile-pattern">
+        <div className="tile-3"></div>
+      </div>
+      <div className="container text-light">
+        <h1 className="my-4 catalog-header">Movie Catalog</h1>
+
+        {movies.length === 0 ? (
+          <div className="alert alert-info mt-4">
+            No movies were found in the database.
+          </div>
+        ) : (
+          // Bootstrap grid structure for the movie cards
+          <div className="row row-cols-1 row-cols-md-3 g-4 mx-5 mb-5">
+            {/* Loop through the fetched movies array and generate a card for each */}
+
+            {movies.map((movie) => (
+              <Link
+                // 🚀 STEP 2: Use a template literal to construct the path:
+                // "/details/" must match the path in App.tsx
+                // ${product.id} inserts the actual unique ID
+                to={`/Pages/productDetailsPage/${movie.MovieId}`}
+                className="card-link-wrapper text-decoration-none"
+              >
+                <div key={movie.MovieId} className="col">
+                  <div className="card h-100 shadow-sm movie-card">
+                    <img
+                      src={movie.CoverImage}
+                      className="card-img-top"
+                      // Adding a style for visual consistency if images vary
+                      style={{ maxHeight: "450px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{movie.Title}</h5>
+                      <p className="card-text mb-1">
+                        {movie.Studio}
+                        <br />
+                        Rating: {movie.Rating}/10
+                      </p>
+                      <p className="card-text text-success fw-bold">
+                        Price: ${movie.Price.toFixed(2)}
+                      </p>
+                      <p className="card-text text-muted small">
+                        Released:{" "}
+                        {new Date(movie.ReleaseDate).toLocaleDateString()}
+                      </p>
+
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="btn btn-outline-light me-2 align-items-center"
+                      >
+                        <MdOutlineAddShoppingCart className="me-1" />
+                        Add to Cart
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default DetailsPage;

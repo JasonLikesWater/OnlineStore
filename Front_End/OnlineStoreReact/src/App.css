@@ -1,1 +1,622 @@
+/* ====================================================================== */
+/* 1. GLOBAL STYLES & RESET */
+/* ====================================================================== */
 
+/* Apply smooth scrolling behavior globally */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Set a clean default font and background */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000435; /* Bootstrap's light gray background */
+    color: #ffffff; /* Bootstrap's dark text color */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Ensure the root React app element takes up full height */
+
+:root {
+            --base-navy: #000435;
+            --tile-purple: #1b2053;
+            --tile-light: #303875;
+            --tile-dark: var(--base-navy); 
+            --tile-width: 200px; 
+            --tile-height: 120px; 
+            --skew-angle: -20deg; 
+            --tile-radius: 10px; 
+        }
+
+
+/* ====================================================================== */
+/* 2. BOOTSTRAP OVERRIDES & UTILITIES */
+/* ====================================================================== */
+
+
+/* ====================================================================== */
+/* 3. COMPONENT-SPECIFIC STYLES */
+/* ====================================================================== */
+
+/* 3.A. Movie List Page Styles (Card Hover) */
+
+/* General container/page layout styles */
+.container{
+    position: relative;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Style for the movie cards (implementing the hover effect) */
+.movie-card {
+    /* Set the transition for a smooth animation */
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f0f0f0; /* Light text color */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    /* Hide any overflow just in case the scaling gets weird */
+    overflow: hidden; 
+}
+
+.movie-card:hover {
+    /* Scale the card up slightly (the "pop" effect) */
+    transform: scale(1.02); 
+    
+    /* Give it a deep shadow to make it lift visually. */
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3) !important; 
+    
+    /* Ensure the card renders above its neighbors during hover */
+    z-index: 5; 
+}
+
+/* Styles for the image within the card (using the card-img-top class) */
+.card-img-top {
+    height: 450px;
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 2/3;
+}
+
+/* ---------------------------------------------------------------------- */
+/* 3.B. Navigation Bar Styles (New Addition) */
+/* ---------------------------------------------------------------------- */
+
+/* Text Links: Underline Swipe Effect */
+
+.nav-text-link {
+    position: relative;
+    text-decoration: none !important;
+    color: #ffffff; /* Ensure default color is dark */
+    font-weight: 500;
+    /* Transition for color change */
+    transition: color 0.3s ease-in-out; 
+}
+
+.nav-text-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; /* Position just below the text */
+    left: 0;
+    width: 0; /* Starts hidden */
+    height: 2px; /* Thickness of the line */
+    color: #ffffff;
+    background-color: #0d6efd; /* Bootstrap Primary color */
+    /* Transition for the growth of the underline */
+    transition: width 0.3s ease-in-out; 
+}
+
+.nav-text-link:hover {
+
+    color: #0d6efd !important; /* Text color changes on hover */
+}
+
+.nav-text-link:hover::after {
+    
+    width: 100%; /* Line grows to full width on hover */
+}
+.nav-text-link.active {
+    
+    color: #0d6efd; /* Your desired active color (e.g., Bootstrap primary blue) */
+    font-weight: 600; /* Makes it bolder */
+}
+.nav-text-link.active {
+    /* Use a bright color (like pure white) to contrast with the dark background */
+    color: #ffffff !important; 
+    
+    /* Make the active link bolder */
+    font-weight: 700;
+    pointer-events: none; 
+}
+
+/* Button Links: Color Inversion Effect (Login, Cart) */
+
+/* Target the button itself inside the wrapper */
+.nav-btn-link .btn-outline-primary {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-out;
+}
+
+.details-page-wrapper::before { 
+    
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #0d0a25; 
+  overflow: hidden;
+  padding-bottom: 50px; 
+
+  background: radial-gradient(
+    circle at 70% 20%, 
+    #4d1e7466, 
+    #0d0a2500 70%
+  );
+  z-index: 0; 
+  transform: rotate(45deg);
+}
+
+.details-page-wrapper::after {
+  content: "";
+  position: fixed;
+  bottom: -70px;
+  left: 5%;
+  width: 500px;
+  height: 400px;
+  overflow: hidden;
+  
+  background: radial-gradient(
+    circle at 10% 90%, 
+    rgba(40, 35, 75, 0.6), 
+    rgba(13, 10, 37, 0) 70%
+  );
+  transform: rotate(15deg);
+  z-index: 0;
+}
+
+
+.catalog-header {
+  
+  color: #ffffff;
+
+  /* Optional: Add extra styling to make it stand out */
+  font-weight: 700;
+  border-bottom: 3px solid #f0f0f0; /* Light gray line underneath */
+  padding-bottom: 10px;
+}
+
+.card-title {
+  color: inherit;
+}
+
+/* 2. Add the underline ONLY when the mouse is hovering over the card link */
+.card-title:hover {
+  /* text-decoration: underline will cause the entire text content of the link to be underlined */
+  text-decoration: underline !important;
+}
+
+/*======================================================================*/
+/* 3.c PRODUCT DETAILS PAGE*/
+/*=====================================================================*/
+
+/* ====================================================================== */
+/* 3.C. Product Details Page Styles (Dark Mode) */
+/* ====================================================================== */
+
+/* * NOTE: The .details-page-wrapper, .container, and body styles 
+ * are already defined and provide the dark background and overall layout.
+ */
+
+.product-page-container {
+    max-width: 1200px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+/* --- Card Style --- */
+.product-card-details {
+    /* Slightly lighter than body background for subtle contrast */
+    background-color: #0b1045; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Deeper shadow for dark mode */
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle light border */
+    overflow: hidden;
+    padding: 40px;
+    z-index: 10;
+    position: relative; /* To ensure it sits above the ::before/::after gradients */
+    color: #ffffff; /* Default text color is white/light */
+}
+
+/* --- Grid Layout (Responsive) --- */
+.product-grid {
+    display: flex;
+    flex-direction: column; 
+    gap: 40px;
+}
+
+@media (min-width: 1024px) { 
+    .product-grid {
+        flex-direction: row;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr; /* Slightly larger column for text details */
+        gap: 80px;
+    }
+}
+
+/* --- Image Styles --- */
+.product-image-wrapper {
+    position: relative;
+    padding-top: 150%; /* Creates a standard movie poster aspect ratio (2:3) */
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+.product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+
+.product-image:hover {
+    transform: scale(1.05); /* Slightly bigger hover effect */
+}
+
+/* --- Details Section --- */
+
+.product-title {
+    font-size: 3rem; 
+    font-weight: 800;
+    color: #ffffff; /* White title */
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.product-price {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #ffffff; /* A brighter blue/cyan for high contrast */
+    margin-bottom: 32px;
+}
+
+.section-title {
+    font-size: 1.25rem; 
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* Light line on dark background */
+    padding-bottom: 4px;
+}
+
+.product-description {
+    color: #e0e0e0; /* Off-white for body text, highly readable */
+    line-height: 1.625;
+    margin-bottom: 32px;
+}
+
+.product-meta {
+    margin-bottom: 32px;
+    color: #b0b0b0; /* Light gray for subtle details */
+    font-size: 0.875rem; 
+    line-height: 1.7;
+}
+
+.meta-label {
+    font-weight: 600;
+    color: #ffffff;
+    margin-right: 4px;
+}
+
+/* --- CTA Button --- */
+.add-to-cart-btn {
+    width: 100%;
+    padding: 18px 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000435; /* Dark text for contrast */
+    background-color: #0d6efd; /* Your primary blue accent */
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.4);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #0a58ca; 
+    transform: scale(1.02);
+}
+
+/* --- Star Rating --- */
+.star-rating-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: lightgray;
+}
+
+.star-filled {
+    color: #ffc107; /* Gold/Yellow for filled stars */
+}
+.star.star-half {
+    /* This creates a clipping effect to show only half the star as gold */
+  display: inline-block;
+  position: relative;
+  
+  /* 1. Base star is empty/grey */
+  color: #ccc;
+
+  /* 2. The magic: Use a pseudo-element or clipping to show the filled color */
+  /* Here we use a CSS gradient to cover the left half with gold */
+  background: linear-gradient(to right, gold 50%, #ccc 50%);
+  
+  /* The text fill color needs to be transparent so the background shows through */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.star-empty {
+    color: #3f447a; /* Darker tone for empty stars */
+}
+
+.rating-score {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-left: 10px;
+}
+
+/* --- Misc --- */
+.product-breadcrumb {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.product-breadcrumb:hover {
+    color: #0d6efd; /* Blue on hover */
+}
+
+.product-details-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 40px 0;
+}
+
+.full-details-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 24px;
+}
+
+.full-details-text {
+    color: #e0e0e0;
+    line-height: 1.625;
+}
+
+.placeholder-text {
+    font-style: italic;
+    color: #6b7280;
+    padding-top: 16px;
+    font-size: 0.9rem;
+}
+
+/* --- Mobile Adjustments --- */
+@media (max-width: 576px) {
+    .product-card-details {
+        padding: 20px;
+    }
+    .product-title {
+        font-size: 2rem;
+    }
+    .product-price {
+        font-size: 1.75rem;
+    }
+    .add-to-cart-btn {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+}
+
+
+
+/* ====================================================================== */
+/* 4. MEDIA QUERIES (RESPONSIVENESS) */
+/* ====================================================================== */
+
+/* Example: Adjust the main heading size on small screens */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.75rem;
+        text-align: center;
+    }
+    .card-body {
+        padding: 0.75rem;
+    }
+    /* Add media query for Navbar text to prevent issues on small screens if needed */
+    .nav-text-link {
+        font-size: 0.9rem;
+    }
+    
+}
+
+/* 2. The Pattern Container: Positions, sizes, and skews all shapes */
+.tile-pattern {
+    overflow: hidden;
+    position: fixed;
+    bottom: -250px; 
+    right: -50px; 
+    width: 500px; 
+    height: 500px;
+    /* CRITICAL: Applies the skew transformation to all child elements */
+    transform: skewX(var(--skew-angle));
+    pointer-events: none; 
+    z-index: 1; /* Sits below content (which should have z-index: 10 or higher) */
+}
+
+/* 3. Base style for Tile 2 (::after) & Tile 3 (.tile-3) */
+.tile-pattern .tile-3, 
+.tile-pattern::after { 
+    content: '';
+    position: fixed;
+    width: var(--tile-width);
+    height: var(--tile-height);
+    
+    /* Gradient for the illuminated effect */
+    background: linear-gradient(
+        315deg,
+        var(--tile-light) 0%,
+        var(--tile-purple) 20%,
+        var(--tile-dark) 100%
+    );
+
+    border-radius: var(--tile-radius);
+    transform: none; /* Inherits skew from parent, no additional transform needed */
+}
+
+/* Tile 1: Top Left (using ::before) */
+.tile-pattern::before {
+    top: 50px;
+    left: 50px;
+    width: var(--tile-width);
+    height: var(--tile-height);
+    content: '';
+
+    background: linear-gradient(
+        315deg,
+        var(--tile-light) 0%,
+        var(--tile-purple) 20%,
+        var(--tile-dark) 80%
+    );
+    
+    border-radius: var(--tile-radius);
+    position: fixed;
+}
+
+/* Tile 2: Top Right (::after position override) */
+.tile-pattern::after {
+    top: 50px;
+    left: calc(50px + var(--tile-width) + 20px); 
+}
+
+/* Tile 3: Bottom Left (.tile-3 position and size override) */
+.tile-pattern .tile-3 {
+    top: calc(50px + var(--tile-height) + 20px); 
+    left: 50px;
+    width: calc(var(--tile-width) + 100px); 
+}
+
+/* sign up buttons*/
+
+.get-started-button {
+ /* Colors: A dark purple to bright magenta gradient */
+ background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+ /* Fallback for older browsers (optional) */
+ background: -webkit-linear-gradient(to right, #6a11cb, #2575fc); 
+
+ /* Pill Shape */
+ border-radius: 50px; /* High value ensures a perfect pill shape */
+ border: none; 
+ cursor: pointer;
+
+ /* Text and Size */
+ color: white;
+ font-size: 1.5rem; /* Adjust as needed for size */
+ font-weight: bold;
+ padding: 15px 30px; /* Vertical and horizontal padding */
+ letter-spacing: 0.5px;
+ 
+ /* Optional: Transition for a smooth hover effect */
+ transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.get-started-button:hover {
+ /* Optional: slight scale and shadow on hover for a lift effect */
+ transform: translateY(-2px);
+ box-shadow: 0 4px 15px rgba(37, 117, 252, 0.4);
+}
+
+/* Ensure the button text is visible and the right font */
+.email-signup-form {
+ /* Example styling to align the input and button */
+ display: inline-block;
+ gap: 15px; /* Space between input and button */
+ align-items: center;
+}
+
+.email-signup-form .signup-input {
+  flex-grow: 1;
+  height: 50px;
+  min-width: 300px;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 50px;
+  border-color: white;
+  background-color: #000435;
+  color: white;
+  
+}
+.email-signup-form .signup-input::placeholder {
+    color: white;
+    opacity: .8;
+}
+
+
+.email{
+    color:white;
+}
+.signup-button {
+  height: 60px; /* Match the height of the input for perfect vertical alignment */
+  padding: 0 30px; /* Add horizontal padding for a good button size */
+  font-size: 20px; /* Increase button font size */
+}
+
+.hero-content {
+ /* Ensure the container takes up the necessary width and height if needed */
+ /* For centering text, we primarily need text-align */
+ text-align: center; 
+ 
+ /* If you also want to center the whole block on the page, 
+  you might need additional layout CSS (e.g., flex or grid on the parent).
+  But for just centering the text inside, this is enough: */
+ margin-left: auto;
+ margin-right: auto;
+ max-width: 800px; /* Example: Keep the content from stretching too wide */
+margin-top: 20px;
+}
+
+.hero-subtitle{
+    margin-bottom: 200px;
+}
+
+.signup-container {
+ /* Ensure the container takes up the necessary width and height if needed */
+ /* For centering text, we primarily need text-align */
+ text-align: center; 
+ 
+ /* If you also want to center the whole block on the page, 
+  you might need additional layout CSS (e.g., flex or grid on the parent).
+  But for just centering the text inside, this is enough: */
+ margin-left: 10px;
+ margin-right: auto;
+ margin-bottom: 20px;
+ max-width: 800px; /* Example: Keep the content from stretching too wide */
+ max-height: 400px;
+}
