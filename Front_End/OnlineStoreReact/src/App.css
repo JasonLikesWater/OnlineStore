@@ -460,9 +460,9 @@ body {
 /* 2. The Pattern Container: Positions, sizes, and skews all shapes */
 .tile-pattern {
   overflow: hidden;
-  position: absolute;
-  bottom: -120px;     /* ⬆️ moves it UP */
-  right: -30px;      /* slight nudge left */
+  position: fixed;
+  bottom: -400px;     /* ⬆️ moves it UP */
+  right: -100px;      /* slight nudge left */
   width: 650px;      /* ⬆️ makes it BIGGER */
   height: 650px;     /* ⬆️ makes it BIGGER */
   transform: skewX(var(--skew-angle));
@@ -475,7 +475,7 @@ body {
 .tile-pattern .tile-3,
 .tile-pattern::after {
   content: "";
-  position: absolute;          /* was fixed */
+  position: fixed;          /* was fixed */
   width: var(--tile-width);
   height: var(--tile-height);
 
