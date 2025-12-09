@@ -21,7 +21,7 @@ public class Movie
 public class Genre
 {
     public int GenreId { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }
 
 // Model for the rich data returned by the 'everything' endpoint

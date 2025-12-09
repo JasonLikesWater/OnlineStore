@@ -129,7 +129,7 @@ function ProductDetailsPage(): React.ReactElement {
     return (
       <div className="star-rating-container">
         {stars}
-        <span className="rating-score">({normalizedRating}/5.0)</span>
+        <span className="rating-score">({normalizedRating}/5)</span>
       </div>
     );
   };
