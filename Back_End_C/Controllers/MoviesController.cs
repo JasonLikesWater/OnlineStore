@@ -55,5 +55,22 @@ public class MoviesController : ControllerBase
         return Ok(movie); // Returns 200 OK with the movie object
     }
 
+    [HttpGet("{id}/everything")]
+    public ActionResult<IEnumerable<Back_End_C.Models.MovieDetails>> GetMovieEverything(int id)
+    {
+        // 1. Call the new repository method
+        var movieDetails = _movieRepository.GetMovieEverything(id);
+
+        // 2. Check if any data was returned
+        if (movieDetails == null || !movieDetails.Any())
+        {
+            // Return 404 Not Found if the movie ID doesn't exist
+            return NotFound();
+        }
+
+        // 3. Return the data with a 200 OK status
+        return Ok(movieDetails);
+    }
+
     // Add other GET routes here (e.g., GetMovieReviews, GetMovieEverything)
 }

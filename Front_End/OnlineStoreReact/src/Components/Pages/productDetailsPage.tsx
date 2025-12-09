@@ -94,8 +94,8 @@ function ProductDetailsPage(): React.ReactElement {
   // --- Main Product Display (Modern Look) ---
 
   // Helper for displaying a formatted price (assuming 'price' exists on 'Movie')
-  const formattedPrice = movie.Price
-    ? `$${movie.Price.toFixed(2)}`
+  const formattedPrice = movie.price
+    ? `$${movie.price.toFixed(2)}`
     : "Price Unavailable";
 
   // Helper for displaying stars (optional)
@@ -148,8 +148,8 @@ function ProductDetailsPage(): React.ReactElement {
             <div className="product-image-column">
               <div className="product-image-wrapper">
                 <img
-                  src={movie.CoverImage}
-                  alt={movie.Title}
+                  src={movie.coverImage}
+                  alt={movie.title}
                   className="product-image"
                 />
               </div>
@@ -159,9 +159,9 @@ function ProductDetailsPage(): React.ReactElement {
             <div className="product-details-column">
               <div className="product-details-content">
                 {/* Title and Rating */}
-                <h1 className="product-title">{movie.Title}</h1>
+                <h1 className="product-title">{movie.title}</h1>
                 <div className="product-rating">
-                  <StarRating rating={movie.Rating} />
+                  <StarRating rating={movie.rating} />
                 </div>
 
                 {/* Price */}
@@ -169,19 +169,19 @@ function ProductDetailsPage(): React.ReactElement {
 
                 {/* Short Description / Summary */}
                 <h3 className="section-title">Description</h3>
-                <p className="product-description">{movie.Description}</p>
+                <p className="product-description">{movie.description}</p>
 
                 {/* Key Details */}
                 <div className="product-meta">
                   <p>
-                    <span className="meta-label">Genre:</span> {movie.Genre}
+                    <span className="meta-label">Genre:</span> {movie.genre}
                   </p>
                   <p>
                     <span className="meta-label">Release Date:</span>{" "}
-                    {movie.ReleaseDate}
+                    {movie.releaseDate}
                   </p>
                   <p>
-                    <span className="meta-label">Product SKU:</span> {movie.Sku}
+                    <span className="meta-label">Product SKU:</span> {movie.sku}
                   </p>
                 </div>
               </div>
@@ -202,7 +202,7 @@ function ProductDetailsPage(): React.ReactElement {
           <div className="full-details-section">
             <h2 className="full-details-title">Full Synopsis & Reviews</h2>
             <div className="full-details-text">
-              <p>{movie.Description}</p>
+              <p>{movie.description}</p>
               {/* You would typically load more detailed data or a reviews component here */}
               <p className="placeholder-text">
                 (Placeholder for a reviews section or related products.)

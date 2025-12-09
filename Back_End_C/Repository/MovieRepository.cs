@@ -68,9 +68,11 @@ public class MovieRepository
         return db.Query<Review>(sql, new { MovieId = movieId });
     }
 
+
+
     // Corresponds to: GET /api/movies/:id/everything
     // NOTE: This complex query might return multiple rows for one movie (e.g., one row per review/sale item).
-    public IEnumerable<MovieDetail> GetMovieEverything(int movieId)
+    public IEnumerable<Back_End_C.Models.MovieDetails> GetMovieEverything(int movieId)
     {
         const string sql =
             @"SELECT M.Title, M.Sku, M.Price, M.Rating AS Movie_Rating, M.ReleaseDate, M.Description, M.CoverImage, 
@@ -88,7 +90,7 @@ public class MovieRepository
               LEFT JOIN Sales AS S ON MS.SaleId = S.SaleId 
               WHERE M.MovieId = @MovieId";
         using IDbConnection db = new SqlConnection(_connectionString);
-        return db.Query<MovieDetail>(sql, new { MovieId = movieId });
+        return db.Query<Back_End_C.Models.MovieDetails>(sql, new { MovieId = movieId });
     }
 
     // Corresponds to: GET /api/movies/:title (using LIKE)
