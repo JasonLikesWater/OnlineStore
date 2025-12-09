@@ -24,7 +24,7 @@ public class MovieRepository
     }
 
     // Corresponds to: GET /api/movies/:id
-    public Movie GetMovieById(int movieId)
+    public Movie? GetMovieById(int movieId)
     {
         const string sql = "SELECT * FROM Movies WHERE MovieId = @MovieId";
         using IDbConnection db = new SqlConnection(_connectionString);
