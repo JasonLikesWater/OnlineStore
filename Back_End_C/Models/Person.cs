@@ -1,4 +1,4 @@
-namespace Online_Store.Models
+namespace Back_End_C.Models
 {
     public class Person
     {
