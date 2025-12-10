@@ -40,7 +40,6 @@ function DetailsPage() {
     return (
       <div className="container mt-5">
         <h2>Loading Movie Inventory...</h2>
-        <p>Fetching data from the Node.js backend...</p>
       </div>
     );
   }
@@ -51,8 +50,8 @@ function DetailsPage() {
         <h2>Error Connecting to Server</h2>
         <p>{error}</p>
         <p>
-          **Troubleshooting Tip:** Ensure your Node.js server is running on the
-          correct port (e.g., 5000) and the route (`/api/movies`) is available.
+          **Troubleshooting Tip:** Ensure your server is running on the correct
+          port (e.g., 5000) and the route (`/api/movies`) is available.
         </p>
       </div>
     );
@@ -79,30 +78,30 @@ function DetailsPage() {
                 // 🚀 STEP 2: Use a template literal to construct the path:
                 // "/details/" must match the path in App.tsx
                 // ${product.id} inserts the actual unique ID
-                to={`/Pages/productDetailsPage/${movie.MovieId}`}
+                to={`/Pages/productDetailsPage/${movie.movieId}`}
                 className="card-link-wrapper text-decoration-none"
               >
-                <div key={movie.MovieId} className="col">
+                <div key={movie.movieId} className="col">
                   <div className="card h-100 shadow-sm movie-card">
                     <img
-                      src={movie.CoverImage}
+                      src={movie.coverImage}
                       className="card-img-top"
                       // Adding a style for visual consistency if images vary
                       style={{ maxHeight: "450px", objectFit: "cover" }}
                     />
                     <div className="card-body">
-                      <h5 className="card-title">{movie.Title}</h5>
+                      <h5 className="card-title">{movie.title}</h5>
                       <p className="card-text mb-1">
-                        {movie.Studio}
+                        {movie.studio}
                         <br />
-                        Rating: {movie.Rating}/10
+                        Rating: {movie.rating}/10
                       </p>
                       <p className="card-text text-success fw-bold">
-                        Price: ${movie.Price.toFixed(2)}
+                        Price: ${movie.price?.toFixed(2) ?? "N/A"}
                       </p>
                       <p className="card-text text-muted small">
                         Released:{" "}
-                        {new Date(movie.ReleaseDate).toLocaleDateString()}
+                        {new Date(movie.releaseDate).toLocaleDateString()}
                       </p>
 
                       <a
