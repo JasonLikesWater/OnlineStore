@@ -46,3 +46,13 @@ export interface DetailParams {
   // The required index signature:
   [key: string]: string | undefined; 
 }
+
+type CartItem = {
+  id: number;
+  title: string;
+  director: string;
+  writers: string;
+  cast: string;
+  price: number;
+  posterUrl: string;
+};
