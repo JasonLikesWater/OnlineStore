@@ -57,3 +57,9 @@ type CartItem = {
   price: number;
   posterUrl: string;
 };
+
+export type DecodedToken = {
+  exp: number;
+  UserId: string;
+  Username: string;
+}

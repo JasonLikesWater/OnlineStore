@@ -2,6 +2,8 @@ import logo from "./logo.png";
 import { FaShoppingCart, FaUserCircle, FaSearch } from "react-icons/fa"; // Imported FaSearch icon
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useLayoutEffect} from "react";
+import { jwtDecode } from "jwt-decode";
+import type { DecodedToken } from "../../../interfaces.ts"
 
 function NavBar() {
   // Define a style for the text links to ensure they are white against the dark background
@@ -19,6 +21,22 @@ function NavBar() {
   useEffect(() => {
     const loadUser = () => {
       const stored = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      if(stored && token){
+        try{
+          const decoded = jwtDecode<DecodedToken>(token);
+          if(decoded.exp * 1000 < Date.now()){
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setUser(null);
+            return;
+          }
+          setUser(JSON.parse(stored));
+        }catch{
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
+      }
       setUser(stored ? JSON.parse(stored) : null);
       setDropdownOpen(false);
     };
@@ -143,16 +161,21 @@ function NavBar() {
           )}
 
           {/* Cart Button (Primary/Solid Style - Main CTA) */}
-        <Link
-        to="/Pages/cartPage"
-        className="btn btn-sm btn-outline-light d-flex align-items-center"
-        style={{ borderRadius: "5px" }}
-      >
-        <FaShoppingCart className="me-1" />
-        Cart
-      </Link>
-
-
+          <button
+            className="btn btn-sm btn-outline-light d-flex align-items-center"
+            style={{ borderRadius: "5px" }}
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/Pages/loginPage");
+              } else {
+                navigate("/Pages/cartPage");
+              }
+            }}
+          >
+            <FaShoppingCart className="me-1" />
+            Cart
+          </button>
         </div>
       </div>
     </nav>
