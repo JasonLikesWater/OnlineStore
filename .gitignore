@@ -2,7 +2,7 @@
 .DS_Store
 Thumbs.db
 
-# Ignore environment and sensitive configs (if added later)
+# Ignore environment and sensitive configs
 .env
 
 # Logs

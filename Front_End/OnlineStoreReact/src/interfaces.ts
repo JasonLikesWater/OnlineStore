@@ -1,42 +1,65 @@
 export interface Movie {
-  MovieId: number; 
-  Title: string;
-  DirectorId: number;
-  Studio: string;
-  GenreId: number;
-  Rating: number;
-  Sku: string;
-  Price: number;
-  Weight: number;
-  Dimensions: string;
-  Description: string;
-  CoverImage: string;
-  ReleaseDate: string;
+ // Changed from PascalCase to camelCase to match JSON output:
+ movieId: number; 
+ title: string;
+ directorId: number;
+ studio: string;
+ genreId: number;
+ rating: number;
+ sku: string;
  
+  // IMPORTANT: Price is now nullable to handle "null" from the database
+ price: number | null; 
+ 
+ weight: number;
+ dimensions: string;
+ description: string;
+ coverImage: string;
+ releaseDate: string; // Keep as string, as that's how it's sent in JSON
 }
 
 export interface MovieDetails {
-  Title: string;
-  Sku: string;
-  Price: number;
-  Rating: number;
-  ReleaseDate: string;
-  Description: string;
-  CoverImage: string;
-  DirectorFirstName: string;
-  DirectorLastName: string;
-  Genre: string;
-  CriticUsername: string;
-  CustomerRating: number;
-  CustomerReview: string;
-  Discount: number;
-  SaleCategory: string;
+ // Changed from PascalCase to camelCase to match JSON output:
+ movieId: number; 
+ title: string;
+ sku: string;
+ price: number; // Make nullable
+ movieRating: number;
+ releaseDate: string;
+ description: string;
+ coverImage: string;
+ 
+ // Assuming the serializer is also camelCasing these complex properties:
+ directorFirstName: string;
+ directorLastName: string;
+ genre: string;
+ criticUsername: string;
+ reviewScore: number;
+ reviewDescription: string;
+ saleDiscount: number;
+ saleCategory: string;
 }
 
 export interface DetailParams {
-    // Your defined variable:
-    productId: string; 
-    
-    // The required index signature:
-    [key: string]: string | undefined; 
+  // Keep this as is
+  productId: string; 
+  
+  // The required index signature:
+  [key: string]: string | undefined; 
+}
+
+type CartItem = {
+  id: number;
+  title: string;
+  director: string;
+  writers: string;
+  cast: string;
+  price: number;
+  posterUrl: string;
+};
+
+export type DecodedToken = {
+  exp: number;
+  UserId: string;
+  Username: string;
 }

@@ -25,24 +25,31 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    // Fake auth for now – replace with real API later
-    if (email === "demo@moviehub.com" && password === "password123") {
-      // store a simple “logged in” flag
-      localStorage.setItem(
-        "moviehubUser",
-        JSON.stringify({ email, loggedInAt: new Date().toISOString() })
-      );
-
-      navigate("/"); // send them back to home
-    } else {
-      setError("Invalid email or password. Try demo@moviehub.com / password123.");
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  try{
+    const response = await fetch("http://localhost:5000/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    if(!response.ok){
+      const err = await response.json();
+      setError(err.error || "Login failed.");
+      return;
     }
-  };
-
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    window.dispatchEvent(new Event("userChanged"));
+    navigate("/");
+  } catch (err) {
+    setError("Unable to reach server.");
+  }
+};
   return (
     <div className="login-page-wrapper">
       <div className="login-card">
