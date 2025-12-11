@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Back_End_C.Models;
+using OnlineStore.Models;
 
 namespace OnlineStore.Tests.Models
 {
