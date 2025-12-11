@@ -4,16 +4,16 @@ VALUES
 ('The Matrix', 2, 'Warner Bros', 1, 10, 'SKU000002', 12.99, 0.45, '7x5', 'Sci-fi action classic.', 'https://upload.wikimedia.org/wikipedia/en/d/db/The_Matrix.png', '1999-03-31'),
 ('Interstellar', 1, 'Paramount', 2, 9, 'SKU000003', 16.99, 0.55, '7x5', 'A journey through space and time.', 'https://m.media-amazon.com/images/I/91UMpWgj05L._AC_UF1000,1000_QL80_.jpg', '2014-11-07'),
 ('I Like Water', 6, 'JasonCo', 4, 10, 'SKU000004', 100.99, 0.4, '7x5', '90 minute monoglue about Jason liking Water', 'https://media.licdn.com/dms/image/v2/D5603AQGR90Ffh9WNkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1728511574950?e=2147483647&v=beta&t=rC2cAOODqHIyJbYNnty4BGYN8Hjq91It9H9F5-HCC9I', '2025-10-23'),
-('The Dark Knight', 1, 'Warner Bros', 1, 10, 'SKU000005', 14.49, 0.52, '7x5', 'Batman faces the Joker.', 'darkknight.jpg', '2008-07-18'),
-('Dunkirk', 1, 'Warner Bros', 4, 9, 'SKU000006', 13.99, 0.48, '7x5', 'WWII soldiers struggle to survive.', 'dunkirk.jpg', '2017-07-21'),
-('John Wick', 3, 'Summit', 1, 9, 'SKU000007', 12.49, 0.46, '7x5', 'A retired assassin seeks revenge.', 'johnwick.jpg', '2014-10-24'),
-('Arrival', 7, 'Paramount', 2, 9, 'SKU000008', 15.49, 0.52, '7x5', 'An alien encounter changes humanity.', 'arrival.jpg', '2016-11-11'),
-('The Martian', 11, '20th Century Fox', 5, 9, 'SKU000009', 17.99, 0.6, '7x5', 'An astronaut survives on Mars.', 'martian.jpg', '2015-10-02'),
-('Blade Runner 2049', 12, 'Warner Bros', 2, 10, 'SKU000010', 18.49, 0.56, '7x5', 'A new blade runner discovers a secret.', 'br2049.jpg', '2017-10-06'),
-('Tenet', 1, 'Warner Bros', 3, 8, 'SKU000011', 19.99, 0.57, '7x5', 'Time inversion espionage thriller.', 'tenet.jpg', '2020-08-26'),
-('Mad Max: Fury Road', 13, 'Warner Bros', 1, 10, 'SKU000012', 14.79, 0.5, '7x5', 'A desert chase for survival.', 'madmax.jpg', '2015-05-15'),
-('The Revenant', 14, '20th Century Fox', 4, 9, 'SKU000013', 13.89, 0.49, '7x5', 'A frontiersman seeks revenge.', 'revenant.jpg', '2015-12-25'),
-('Gravity', 15, 'Warner Bros', 2, 8, 'SKU000014', 14.29, 0.44, '7x5', 'Astronauts stranded in space.', 'gravity.jpg', '2013-10-04');
+('The Dark Knight', 1, 'Warner Bros', 1, 10, 'SKU000005', 14.49, 0.52, '7x5', 'Batman faces the Joker.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxsc3y8f6axKrxHKlFnRaVaByZd9GxgIxdvmurQxJtrby1y05lW1SG0mOnNpwTq90m_pAIjw&s=10', '2008-07-18'),
+('Dunkirk', 1, 'Warner Bros', 4, 9, 'SKU000006', 13.99, 0.48, '7x5', 'WWII soldiers struggle to survive.', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe99rkQPNs3ZkNLDnAwcq6r0UzesiT64NqSztuvHKUJUnsrcONbFX7qJg_crnLW7BBb3mkZg&s=10', '2017-07-21'),
+('John Wick', 3, 'Summit', 1, 9, 'SKU000007', 12.49, 0.46, '7x5', 'A retired assassin seeks revenge.', 'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_.jpg', '2014-10-24'),
+('Arrival', 7, 'Paramount', 2, 9, 'SKU000008', 15.49, 0.52, '7x5', 'An alien encounter changes humanity.', 'https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_.jpg', '2016-11-11'),
+('The Martian', 11, '20th Century Fox', 5, 9, 'SKU000009', 17.99, 0.6, '7x5', 'An astronaut survives on Mars.', 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10980706_p_v13_ar.jpg', '2015-10-02'),
+('Blade Runner 2049', 12, 'Warner Bros', 2, 10, 'SKU000010', 18.49, 0.56, '7x5', 'A new blade runner discovers a secret.', 'https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_.jpg', '2017-10-06'),
+('Tenet', 1, 'Warner Bros', 3, 8, 'SKU000011', 19.99, 0.57, '7x5', 'Time inversion espionage thriller.', 'https://m.media-amazon.com/images/M/MV5BNTgwNDQzZTktMjQxNS00MGZmLWIxMmYtZmFkN2MxZWRjNjhjXkEyXkFqcGc@._V1_.jpg', '2020-08-26'),
+('Mad Max: Fury Road', 13, 'Warner Bros', 1, 10, 'SKU000012', 14.79, 0.5, '7x5', 'A desert chase for survival.', 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10854488_p_v8_ac.jpg', '2015-05-15'),
+('The Revenant', 14, '20th Century Fox', 4, 9, 'SKU000013', 13.89, 0.49, '7x5', 'A frontiersman seeks revenge.', 'https://lumiere-a.akamaihd.net/v1/images/revenant_584x800_6d98d1b6.jpeg?region=0%2C0%2C584%2C800', '2015-12-25'),
+('Gravity', 15, 'Warner Bros', 2, 8, 'SKU000014', 14.29, 0.44, '7x5', 'Astronauts stranded in space.', 'https://m.media-amazon.com/images/M/MV5BNjE5MzYwMzYxMF5BMl5BanBnXkFtZTcwOTk4MTk0OQ@@._V1_.jpg', '2013-10-04');
 
 
 INSERT INTO Users (Username, PasswordHash, Email)
