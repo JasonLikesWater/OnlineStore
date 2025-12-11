@@ -5,12 +5,12 @@ import { MdOutlineAddShoppingCart } from "react-icons/md";
 
 var API_URL = "http://localhost:5000/api";
 
-// --- Data Fetching Function (Kept as is) ---
+// --- Data Fetching Function (FIXED to extract element from array) ---
 async function fetchMovieById(
   id: string,
   signal?: AbortSignal
 ): Promise<MovieDetails> {
-  var url = `${API_URL}/movies/${id}`;
+  var url = `${API_URL}/movies/${id}/everything`;
   var response = await fetch(url, { signal });
 
   if (!response.ok) {
@@ -19,8 +19,16 @@ async function fetchMovieById(
     );
   }
 
-  var data: MovieDetails = await response.json();
-  return data;
+  // 1. We now explicitly declare the expected response type as an array
+  var dataArray: MovieDetails[] = await response.json();
+
+  // 2. Check if the array has data and return the first element
+  if (dataArray && dataArray.length > 0) {
+    return dataArray[0]; // Returns the single MovieDetails object
+  } else {
+    // 3. Handle the scenario where the API returns a 200 OK status but an empty array
+    throw new Error(`Product details not found for ID: ${id}`);
+  }
 }
 // ------------------------------------------
 
@@ -39,6 +47,7 @@ function ProductDetailsPage(): React.ReactElement {
       setIsLoading(true);
       setError(null);
 
+      // fetchMovieById now returns the single object, so `data` is `MovieDetails`
       fetchMovieById(productId, signal)
         .then(function (data) {
           setMovie(data);
@@ -47,6 +56,7 @@ function ProductDetailsPage(): React.ReactElement {
           if (err.name === "AbortError") return;
 
           console.error("Fetch error:", err);
+          // Catching the error thrown by fetchMovieById for empty array
           setError(err.message || "An unknown error occurred during fetch.");
         })
         .finally(function () {
@@ -93,31 +103,39 @@ function ProductDetailsPage(): React.ReactElement {
 
   // --- Main Product Display (Modern Look) ---
 
+  const originalRating = movie.movieRating || 0;
+  const normalizedRating = originalRating / 2; // Normalized to 5-star scale (e.g., 9.0/2 = 4.5)
+
   // Helper for displaying a formatted price (assuming 'price' exists on 'Movie')
+  // NOTE: You may want to check if movie.price is null/undefined if it's optional in MovieDetails
   const formattedPrice = movie.price
     ? `$${movie.price.toFixed(2)}`
     : "Price Unavailable";
 
-  // Helper for displaying stars (optional)
+  const formattedReleaseDate = movie.releaseDate
+    ? movie.releaseDate.substring(0, 10)
+    : "Date Unavailable";
+
   // Helper for displaying stars (using 5-star scale)
   const StarRating = ({ rating }: { rating: number }) => {
-    // Convert the rating (out of 10) to a 5-star scale
-    const normalizedRating = rating / 2; // e.g., 8.5/10 -> 4.25/5
-
+    // `rating` is the prop passed to the component
     const stars = Array(5)
       .fill(null)
       .map((_, i) => {
         const starIndex = i + 1;
         let starType = "star-empty"; // Default to empty
 
-        if (starIndex <= normalizedRating) {
+        // CORRECTED: Use the prop `rating` here
+        if (starIndex <= rating) {
           starType = "star-filled"; // Full star
-        } else if (starIndex - 0.5 <= normalizedRating) {
+        } else if (starIndex - 0.5 <= rating) {
           starType = "star-half"; // Half star
         }
 
         // Use conditional rendering for the symbol based on the starType
-        const symbol = starType === "star-half" ? "★" : "★"; // We'll style the half-star appearance using CSS masks/gradients
+        // NOTE: If you are using Font Awesome or a specific CSS library,
+        // you would typically use classes here (e.g., `<i class="fa-star-half">`)
+        const symbol = starType === "star-half" ? "★" : "★"; // Simple symbol is fine for now
 
         return (
           <span key={i} className={`star ${starType}`}>
@@ -129,7 +147,7 @@ function ProductDetailsPage(): React.ReactElement {
     return (
       <div className="star-rating-container">
         {stars}
-        <span className="rating-score">({normalizedRating}/5)</span>
+        <span className="rating-score">({rating.toFixed(1)}/5.0)</span>
       </div>
     );
   };
@@ -161,7 +179,8 @@ function ProductDetailsPage(): React.ReactElement {
                 {/* Title and Rating */}
                 <h1 className="product-title">{movie.title}</h1>
                 <div className="product-rating">
-                  <StarRating rating={movie.rating} />
+                  {/* Now StarRating correctly uses the normalizedRating as its prop */}
+                  <StarRating rating={normalizedRating} />
                 </div>
 
                 {/* Price */}
@@ -174,11 +193,14 @@ function ProductDetailsPage(): React.ReactElement {
                 {/* Key Details */}
                 <div className="product-meta">
                   <p>
-                    <span className="meta-label">Genre:</span> {movie.genre}
+                    <span className="meta-label">Genre:</span> {""}
+                    {Array.isArray(movie.genre)
+                      ? movie.genre.map((g) => g.name).join(", ")
+                      : movie.genre}
                   </p>
                   <p>
                     <span className="meta-label">Release Date:</span>{" "}
-                    {movie.releaseDate}
+                    {formattedReleaseDate}
                   </p>
                   <p>
                     <span className="meta-label">Product SKU:</span> {movie.sku}

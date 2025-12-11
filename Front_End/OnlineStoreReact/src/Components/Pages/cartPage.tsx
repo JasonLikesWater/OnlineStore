@@ -2,7 +2,7 @@ import React from "react";
 import "./cartPage.css";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { type MovieDetails } from "../../interfaces";
+//import { type CartItem } from "../../interfaces";
 
 type CartItem = {
   id: number;
@@ -16,6 +16,14 @@ type CartItem = {
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (!token || !user) {
+      navigate("/Pages/loginPage");
+    }
+  }, [navigate]);
   // TODO: replace with real cart data from context / backend
   const items: CartItem[] = [
     {

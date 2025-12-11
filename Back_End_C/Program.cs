@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using Back_End_C.Repository;
+using OnlineStore.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -12,10 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
 
-// 🛑 FIX 1: Define a descriptive NAME for the policy, not the URL.
+// 1. Policy Name Defined
 var MyAllowSpecificOrigins = "_myVitePolicy";
-// You can remove the unused variable that previously held the URL: 
-// var MyAllowSpecificOrigins = "http://localhost:5173"; // Removed/renamed
 
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -30,13 +28,29 @@ builder.Configuration["Jwt:Key"] = jwtKey;
 
 string connString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
-builder.Services.AddScoped<Back_End_C.Repository.UserRepository>(s => new Back_End_C.Repository.UserRepository(connString));
-builder.Services.AddScoped<Back_End_C.Repository.MovieRepository>(s => new Back_End_C.Repository.MovieRepository(connString));
+builder.Services.AddScoped<OnlineStore.Repository.UserRepository>(s => new OnlineStore.Repository.UserRepository(connString));
+builder.Services.AddScoped<OnlineStore.Repository.MovieRepository>(s => new OnlineStore.Repository.MovieRepository(connString));
 
 builder.Services.AddControllers();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-    options.TokenValidationParameters = new TokenValidationParameters {
+// 2. CORS Service Added
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                        policy =>
+                        {
+                            // Allowing common React/Vite development ports
+                            policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+});
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,
@@ -47,29 +61,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddCors(options =>
-{
-    // 🛑 FIX 2: Use the descriptive NAME here.
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                        policy =>
-                        {
-                            // 🛑 FIX 3: Include all necessary origins (Vite usually uses 5173)
-                            policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                        });
-});
-
 var app = builder.Build();
 
-// 🛑 FIX 4: Apply the policy using the descriptive NAME.
+// --- CRITICAL FIX: MIDDLEWARE ORDER IS CORRECTED HERE ---
+
+// 3. CORS Middleware Applied (MUST be before UseAuthorization and MapControllers)
 app.UseCors(MyAllowSpecificOrigins);
 
+// UseRouting is generally placed before CORS, but after the use of app.UseStaticFiles() if applicable.
+// If you are using endpoint routing (which MapControllers uses), UseRouting should be early.
 app.UseRouting();
 
+// Authentication and Authorization come after Routing and CORS
 app.UseAuthentication();
 app.UseAuthorization();
 
+// MapControllers is the final step that executes the endpoint logic
 app.MapControllers();
 
 app.Run();

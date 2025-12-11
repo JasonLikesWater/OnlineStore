@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 const API_URL = "http://localhost:5000/api/movies";
 
 function DetailsPage() {
+  // Note: You might want to rename this component to ProductListPage
   // State Initialization
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -16,9 +17,7 @@ function DetailsPage() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // Axios makes the GET request and ensures the response data matches Movie[]
         const response = await axios.get<Movie[]>(API_URL);
-
         setMovies(response.data);
         setLoading(false);
       } catch (err) {
@@ -34,8 +33,7 @@ function DetailsPage() {
     fetchMovies();
   }, []);
 
-  //  Conditional Rendering (Loading/Error States) ---
-
+  // Conditional Rendering (Loading/Error States) ---
   if (loading) {
     return (
       <div className="container mt-5">
@@ -74,19 +72,18 @@ function DetailsPage() {
             {/* Loop through the fetched movies array and generate a card for each */}
 
             {movies.map((movie) => (
+              // 🚀 FIX 1: The key prop must be on the outermost element of the map function, which is the <Link>.
               <Link
-                // 🚀 STEP 2: Use a template literal to construct the path:
-                // "/details/" must match the path in App.tsx
-                // ${product.id} inserts the actual unique ID
+                key={movie.movieId} // <-- Key moved here
                 to={`/Pages/productDetailsPage/${movie.movieId}`}
                 className="card-link-wrapper text-decoration-none"
               >
-                <div key={movie.movieId} className="col">
+                {/* Removed the key from the <div> element */}
+                <div className="col">
                   <div className="card h-100 shadow-sm movie-card">
                     <img
                       src={movie.coverImage}
                       className="card-img-top"
-                      // Adding a style for visual consistency if images vary
                       style={{ maxHeight: "450px", objectFit: "cover" }}
                     />
                     <div className="card-body">
@@ -104,16 +101,19 @@ function DetailsPage() {
                         {new Date(movie.releaseDate).toLocaleDateString()}
                       </p>
 
-                      <a
-                        href="#"
+                      {/* 🛠️ FIX 2: Replaced the nested <a> with a <button> tag. 
+                          This resolves the "<a> cannot be a descendant of <a>" error. */}
+                      <button
+                        type="button" // Use type="button" for clarity
                         onClick={(e) => {
+                          // Stop propagation prevents the click from triggering the parent <Link> navigation
                           e.stopPropagation();
                         }}
                         className="btn btn-outline-light me-2 align-items-center"
                       >
                         <MdOutlineAddShoppingCart className="me-1" />
                         Add to Cart
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

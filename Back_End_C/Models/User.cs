@@ -1,8 +1,9 @@
-namespace Back_End_C.Models {
-    public class User {
-        public int UserId { get; set; }
-        public string Username { get; set; } = "";
-        public string? PasswordHash { get; set; }
-        public string? Email { get; set; }
-    }
+namespace OnlineStore.Models;
+
+public class User
+{
+    public int UserId { get; set; }
+    public string Username { get; set; } = "";
+    public string? PasswordHash { get; set; }
+    public string? Email { get; set; }
 }
