@@ -1,4 +1,4 @@
-namespace Back_End_C.Genre
+namespace OnlineStore.Models
 {
     public class Genre
     {

@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Back_End_C.Models;
-using Back_End_C.Repository;
+using OnlineStore.Repository;
 using System.Collections.Generic;
-using System; // Required for the 'Exception' type in your catch block
+using System;
+using OnlineStore.Models; // Required for the 'Exception' type in your catch block
 
 
 // --- CRITICAL FIX: Add the file-scoped namespace declaration here ---
 // It MUST be after all 'using' statements and before the attributes/class.
-namespace Back_End_C.Controllers;
+namespace OnlineStore.Controllers;
 
 // Defines the base route for all methods in this controller: /api/movies
 [Route("api/[controller]")]
@@ -24,7 +24,7 @@ public class MoviesController : ControllerBase
 
     // Corresponds to: GET http://localhost:PORT/api/movies
     [HttpGet]
-    public ActionResult<IEnumerable<Movie>> GetMovies()
+    public ActionResult<IEnumerable<MovieDetails>> GetMovies()
     {
         try
         {
@@ -56,7 +56,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("{id}/everything")]
-    public ActionResult<IEnumerable<Back_End_C.Models.MovieDetails>> GetMovieEverything(int id)
+    public ActionResult<IEnumerable<OnlineStore.Models.MovieDetails>> GetMovieEverything(int id)
     {
         // 1. Call the new repository method
         var movieDetails = _movieRepository.GetMovieEverything(id);

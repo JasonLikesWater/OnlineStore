@@ -20,10 +20,11 @@ export interface Movie {
 
 export interface MovieDetails {
  // Changed from PascalCase to camelCase to match JSON output:
+ movieId: number; 
  title: string;
  sku: string;
- price: number | null; // Make nullable
- rating: number;
+ price: number; // Make nullable
+ movieRating: number;
  releaseDate: string;
  description: string;
  coverImage: string;
@@ -33,9 +34,9 @@ export interface MovieDetails {
  directorLastName: string;
  genre: string;
  criticUsername: string;
- customerRating: number;
- customerReview: string;
- discount: number;
+ reviewScore: number;
+ reviewDescription: string;
+ saleDiscount: number;
  saleCategory: string;
 }
 

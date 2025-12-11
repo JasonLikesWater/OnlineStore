@@ -4,16 +4,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
-using Back_End_C.Repository;
-using Back_End_C.Models;
+using OnlineStore.Repository;
+using OnlineStore.Models;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase {
+public class UsersController : ControllerBase
+{
     private readonly UserRepository _userRepo;
     private readonly IConfiguration _config;
 
-    public UsersController(UserRepository userRepo, IConfiguration config) {
+    public UsersController(UserRepository userRepo, IConfiguration config)
+    {
         _userRepo = userRepo;
         _config = config;
     }
@@ -27,12 +29,13 @@ public class UsersController : ControllerBase {
      * POST /api/users
      */
     [HttpPost]
-    public async Task<IActionResult> Register([FromBody] User newUser) {
-        if(string.IsNullOrWhiteSpace(newUser.Username) || string.IsNullOrWhiteSpace(newUser.PasswordHash) || string.IsNullOrWhiteSpace(newUser.Email))
+    public async Task<IActionResult> Register([FromBody] User newUser)
+    {
+        if (string.IsNullOrWhiteSpace(newUser.Username) || string.IsNullOrWhiteSpace(newUser.PasswordHash) || string.IsNullOrWhiteSpace(newUser.Email))
             return BadRequest(new { error = "Missing required fields" });
-        if(await _userRepo.UsernameExistsAsync(newUser.Username))
+        if (await _userRepo.UsernameExistsAsync(newUser.Username))
             return BadRequest(new { error = "Username already exists" });
-        if(await _userRepo.EmailExistsAsync(newUser.Email))
+        if (await _userRepo.EmailExistsAsync(newUser.Email))
             return BadRequest(new { error = "Email already exists" });
         newUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newUser.PasswordHash, 10);
         var createdUser = await _userRepo.CreateUserAsync(newUser);
@@ -61,16 +64,18 @@ public class UsersController : ControllerBase {
      *  POST /api/users/login
      */
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request) {
-        if(string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             return BadRequest(new { error = "Missing required fields" });
         var user = await _userRepo.GetByEmailAsync(request.Email);
-        if(user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return Unauthorized(new { error = "Invalid email or password" });
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured"));
-        var tokenDescriptor = new SecurityTokenDescriptor {
-            Subject = new ClaimsIdentity(new[] {new Claim("UserId", user.UserId.ToString()), new Claim("Username", user.Username)}),
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[] { new Claim("UserId", user.UserId.ToString()), new Claim("Username", user.Username) }),
             Expires = DateTime.UtcNow.AddHours(1),
             Issuer = "OnlineStore",
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -87,10 +92,11 @@ public class UsersController : ControllerBase {
      */
     [Authorize]
     [HttpGet("me")]
-    public async Task<IActionResult> GetMe() {
+    public async Task<IActionResult> GetMe()
+    {
         var userId = int.Parse(User.FindFirstValue("UserId")!);
         var user = await _userRepo.GetByIdAsync(userId);
-        if(user == null) return NotFound(new { error = "User not found" });
+        if (user == null) return NotFound(new { error = "User not found" });
         user.PasswordHash = null;
         return Ok(user);
     }
@@ -101,7 +107,8 @@ public class UsersController : ControllerBase {
      */
     [Authorize]
     [HttpGet("me/carts")]
-    public async Task<IActionResult> GetMyCarts() {
+    public async Task<IActionResult> GetMyCarts()
+    {
         var userId = int.Parse(User.FindFirstValue("UserId")!);
         var carts = await _userRepo.GetCartsForUserAsync(userId);
         return Ok(carts);
@@ -113,7 +120,8 @@ public class UsersController : ControllerBase {
      */
     [Authorize]
     [HttpGet("me/reviews")]
-    public async Task<IActionResult> GetMyReviews() {
+    public async Task<IActionResult> GetMyReviews()
+    {
         var userId = int.Parse(User.FindFirstValue("UserId")!);
         var reviews = await _userRepo.GetReviewsByUserAsync(userId);
         return Ok(reviews);
@@ -128,10 +136,11 @@ public class UsersController : ControllerBase {
      */
     [Authorize]
     [HttpPut("me")]
-    public async Task<IActionResult> UpdateMe([FromBody] UpdateUserRequest request) {
+    public async Task<IActionResult> UpdateMe([FromBody] UpdateUserRequest request)
+    {
         var userId = int.Parse(User.FindFirstValue("UserId")!);
         var updatedUser = await _userRepo.UpdateUserAsync(userId, request);
-        if(updatedUser == null) return BadRequest(new { error = "No fields to update or username taken" });
+        if (updatedUser == null) return BadRequest(new { error = "No fields to update or username taken" });
         updatedUser.PasswordHash = null;
         return Ok(new { message = "User updated successfully", user = updatedUser });
     }
@@ -150,20 +159,23 @@ public class UsersController : ControllerBase {
      */
     [Authorize]
     [HttpDelete("me")]
-    public async Task<IActionResult> DeleteMe() {
+    public async Task<IActionResult> DeleteMe()
+    {
         var userId = int.Parse(User.FindFirstValue("UserId")!);
         var success = await _userRepo.DeleteUserAsync(userId);
-        if(!success) return NotFound(new { error = "User not found" });
+        if (!success) return NotFound(new { error = "User not found" });
         return Ok(new { message = "User, cart, and all cart orders deleted successfully" });
     }
 }
 
-public class LoginRequest {
+public class LoginRequest
+{
     public string Email { get; set; } = "";
     public string Password { get; set; } = "";
 }
 
-public class UpdateUserRequest {
+public class UpdateUserRequest
+{
     public string? Username { get; set; }
     public string? PasswordHash { get; set; }
     public string? Email { get; set; }

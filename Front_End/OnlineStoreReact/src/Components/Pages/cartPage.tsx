@@ -2,7 +2,7 @@ import React from "react";
 import "./cartPage.css";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { type MovieDetails } from "../../interfaces";
+//import { type CartItem } from "../../interfaces";
 
 type CartItem = {
   id: number;

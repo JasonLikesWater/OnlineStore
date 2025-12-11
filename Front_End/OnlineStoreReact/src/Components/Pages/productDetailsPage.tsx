@@ -29,6 +29,7 @@ function ProductDetailsPage(): React.ReactElement {
   var [movie, setMovie] = useState<MovieDetails | null>(null);
   var [isLoading, setIsLoading] = useState(true);
   var [error, setError] = useState<string | null>(null);
+  let normalizedRating = 0;
 
   // Data Fetching Effect (With AbortController for cleanup) - Kept as is
   useEffect(() => {
@@ -102,7 +103,7 @@ function ProductDetailsPage(): React.ReactElement {
   // Helper for displaying stars (using 5-star scale)
   const StarRating = ({ rating }: { rating: number }) => {
     // Convert the rating (out of 10) to a 5-star scale
-    const normalizedRating = rating / 2; // e.g., 8.5/10 -> 4.25/5
+    normalizedRating = rating / 2; // e.g., 8.5/10 -> 4.25/5
 
     const stars = Array(5)
       .fill(null)
@@ -129,7 +130,7 @@ function ProductDetailsPage(): React.ReactElement {
     return (
       <div className="star-rating-container">
         {stars}
-        <span className="rating-score">({normalizedRating}/5)</span>
+        <span className="rating-score">({normalizedRating}/5.0)</span>
       </div>
     );
   };
@@ -161,7 +162,7 @@ function ProductDetailsPage(): React.ReactElement {
                 {/* Title and Rating */}
                 <h1 className="product-title">{movie.title}</h1>
                 <div className="product-rating">
-                  <StarRating rating={movie.rating} />
+                  <StarRating rating={normalizedRating} />
                 </div>
 
                 {/* Price */}
@@ -174,7 +175,10 @@ function ProductDetailsPage(): React.ReactElement {
                 {/* Key Details */}
                 <div className="product-meta">
                   <p>
-                    <span className="meta-label">Genre:</span> {movie.genre}
+                    <span className="meta-label">Genre:</span> {""}
+                    {Array.isArray(movie.genre)
+                      ? movie.genre.map((g) => g.name).join(", ")
+                      : movie.genre}
                   </p>
                   <p>
                     <span className="meta-label">Release Date:</span>{" "}
