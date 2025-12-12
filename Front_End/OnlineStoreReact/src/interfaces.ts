@@ -48,15 +48,15 @@ export interface DetailParams {
   [key: string]: string | undefined; 
 }
 
-type CartItem = {
-  id: number;
+export type CartItem = {
+  cartId: number;
+  orderId: number;
+  movieId: number;
   title: string;
-  director: string;
-  writers: string;
-  cast: string;
   price: number;
-  posterUrl: string;
+  quantity: number;
 };
+
 
 export type DecodedToken = {
   exp: number;

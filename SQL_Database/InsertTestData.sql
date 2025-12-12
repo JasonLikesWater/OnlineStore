@@ -87,6 +87,10 @@ VALUES
 INSERT INTO Orders (CartId, MovieId)
 VALUES
 (1, 1),   -- John buys Inception
+(1, 1),   -- John buys Inception again
+(1, 1),   -- John buys a third Inception
+(1, 2),   -- John buys The Matrix
+(1, 3),   -- John buys Interstellar
 (2, 2),   -- Sarah buys The Matrix
 (3, 3),   -- Mike buys Interstellar
 (4, 5),
@@ -160,8 +164,7 @@ VALUES
 (12, 11), -- Charlize Theron
 (13, 15), -- Inarritu
 (13, 4),  -- DiCaprio
-(14, 16), -- Sandra Bullock
-(14, 17);
+(14, 16); -- Sandra Bullock
 
 INSERT INTO MovieReview (MovieId, ReviewId)
 VALUES
@@ -177,8 +180,7 @@ VALUES
 (10, 10), -- BR2049
 (11, 11), -- Tenet
 (12, 12), -- Fury Road
-(13, 13), -- Revenant
-(14, 14);
+(13, 13); -- Revenant
 
 INSERT INTO MovieSales (MovieId, SaleId)
 VALUES
