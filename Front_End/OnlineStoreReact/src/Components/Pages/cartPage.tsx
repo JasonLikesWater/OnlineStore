@@ -2,56 +2,58 @@ import React from "react";
 import "./cartPage.css";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-//import { type CartItem } from "../../interfaces";
-
-type CartItem = {
-  id: number;
-  title: string;
-  director: string;
-  writers: string;
-  cast: string;
-  price: number;
-  posterUrl: string;
-};
+import type { CartItem } from "../../interfaces";
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
+  const [items,setItems] = React.useState<CartItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
   React.useEffect(() => {
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
 
-    if (!token || !user) {
+    if (!token) {
       navigate("/Pages/loginPage");
+      return;
     }
+    const fetchCart = async () => {
+      try{
+        const res = await fetch("http://localhost:5000/api/users/me/carts", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if(!res.ok){
+          navigate("/Pages/loginPage");
+          return;
+        }
+        const data = await res.json();
+        console.log("RAW CART DATA:", data);
+        const groupedItems: CartItem[] = [];
+        data.forEach((item: any) => {
+          const existing = groupedItems.find(i => i.movieId === item.movieId);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            groupedItems.push({
+              cartId: item.cartId,
+              orderId: item.orderId,
+              movieId: item.movieId,
+              title: item.title,
+              price: item.price,
+              quantity: 1
+            });
+          }
+        });
+        setItems(groupedItems);
+      }catch(err){
+        console.error("Failed to load cart:", err);
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchCart();
   }, [navigate]);
-  // TODO: replace with real cart data from context / backend
-  const items: CartItem[] = [
-    {
-      id: 1,
-      title: "Barbie (2023)",
-      director: "Greta Gerwig",
-      writers: "Greta Gerwig, Noah Baumbach",
-      cast: "Ensemble cast includes well-known stars from film and TV",
-      price: 18.99,
-      posterUrl: "https://via.placeholder.com/80x120?text=Barbie",
-    },
-    {
-      id: 2,
-      title: "Expendables 2",
-      director: "Simon West",
-      writers: "Richard Wenk, Sylvester Stallone",
-      cast: "Ensemble cast includes well-known stars from film and TV",
-      price: 29.99,
-      posterUrl: "https://via.placeholder.com/80x120?text=Expendables",
-    },
-  ];
-
-  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
-
-  const handleApplyPromo = () => {
-    // mock handler for now
-    alert("Promo codes will be implemented later.");
-  };
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div className="cart-page container py-4">
@@ -59,6 +61,7 @@ const CartPage: React.FC = () => {
       <button
         type="button"
         className="cart-back-btn d-inline-flex align-items-center mb-4"
+        onClick={() => navigate(-1)}
       >
         <FaArrowLeft className="me-2" />
         <span>Continue shopping</span>
@@ -66,27 +69,18 @@ const CartPage: React.FC = () => {
 
       {/* Cart items */}
       <div className="cart-items">
-        {items.map((item) => (
-          <div key={item.id} className="cart-item-card d-flex">
-            <div className="cart-item-image">
-              <img src={item.posterUrl} alt={item.title} />
-            </div>
-
+        {loading && <p>Loading your cart...</p>}
+        {!loading && items.length === 0 && <p>Your cart is empty.</p>}
+        {!loading && items.length > 0 && items.map((item) => (
+          <div key={item.orderId ?? item.cartId} className="cart-item-card d-flex">
             <div className="cart-item-details flex-grow-1">
               <h3 className="cart-item-title">{item.title}</h3>
               <p className="cart-item-meta">
-                <span className="label">Director:</span> {item.director}
-              </p>
-              <p className="cart-item-meta">
-                <span className="label">Writers:</span> {item.writers}
-              </p>
-              <p className="cart-item-meta">
-                <span className="label">Cast:</span> {item.cast}
+                Quantity: {item.quantity}
               </p>
             </div>
-
             <div className="cart-item-price">
-              {item.price.toFixed(2)} <span className="currency">$</span>
+              {(item.price * item.quantity).toFixed(2)} <span className="currency">$</span>
             </div>
           </div>
         ))}
@@ -106,7 +100,7 @@ const CartPage: React.FC = () => {
 
         <div className="cart-summary text-md-end">
           <div className="cart-subtotal mb-2">
-            Subtotal: <span>${subtotal.toFixed(2)}</span>
+            Subtotal: <span>${loading ? "0.00" : subtotal.toFixed(2)}</span>
           </div>
           <button
             className="checkout-button"

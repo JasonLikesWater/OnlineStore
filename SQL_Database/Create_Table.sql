@@ -24,7 +24,7 @@ CREATE TABLE Movies(
 	Dimensions varchar(20),
 	Description varchar(255),
 	CoverImage varchar(255),
-	ReleaseDate varchar(10),
+	ReleaseDate varchar(10)
 );
 
 CREATE TABLE Sales(

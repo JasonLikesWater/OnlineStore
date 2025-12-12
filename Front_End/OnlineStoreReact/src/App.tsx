@@ -7,6 +7,7 @@ import CheckoutPage from "./Components/Pages/checkoutPage";
 import LoginPage from "./Components/Pages/loginPage.tsx";
 import SalesPage from "./Components/Pages/salesPage.tsx";
 import ProductDetailsPage from "./Components/Pages/productDetailsPage";
+import ProtectedRoute from "./ProtectedRoute";
 import "./App.css";
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           path="/Pages/productDetailsPage/:productId"
           element={<ProductDetailsPage />}
         />
-        <Route path="/Pages/cartPage" element={<CartPage />} />
+        <Route path="/Pages/cartPage" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
         <Route path="/Pages/checkoutPage" element={<CheckoutPage />} />
         <Route path="/Pages/salesPage" element={<SalesPage />} />
         <Route path="/Pages/loginPage" element={<LoginPage />} />
