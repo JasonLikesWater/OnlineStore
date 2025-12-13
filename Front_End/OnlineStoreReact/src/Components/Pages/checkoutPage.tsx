@@ -1,26 +1,100 @@
-import React, { FormEvent } from "react";
+import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import type { CartItem } from "../../interfaces";
 import "./checkoutPage.css";
 
 const CheckoutPage: React.FC = () => {
-  // TODO: Replace this with real cart data from context or props
-  const items = [
-    { id: 1, title: "Inception (Blu-ray)", qty: 1, price: 19.99 },
-    { id: 2, title: "The Dark Knight (DVD)", qty: 2, price: 9.99 },
-  ];
+  const navigate = useNavigate();
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/Pages/loginPage");
+      return;
+    }
+    const fetchCart = async () => {
+      try{
+        const res = await fetch("http://localhost:5000/api/users/me/carts", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if(!res.ok){
+          navigate("/Pages/loginPage");
+          return;
+        }
+        const data = await res.json();
+        const groupedItems: CartItem[] = [];
+        data.forEach((item: any) => {
+          const existing = groupedItems.find(
+            i => i.movieId === item.movieId
+          );
+          if(existing){
+            existing.quantity += 1;
+            if (item.orderId) existing.orderIds.push(item.orderId);
+          }else{
+            groupedItems.push({
+              cartId: item.cartId,
+              movieId: item.movieId,
+              title: item.title,
+              price: item.price,
+              quantity: 1,
+              orderIds: item.orderId ? [item.orderId] : [],
+            });
+          }
+        });
+        setItems(groupedItems);
+      }catch(err){
+        console.error("Failed to load cart:", err);
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchCart();
+  }, [navigate]);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = 4.99;
-  const discount = 0; // hook this up to sales later
+  const discount = 0;
   const total = subtotal + shipping - discount;
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Mock checkout – no real payment processing
-    alert("Thank you! This is a mock checkout – your order has been placed.");
+    if(items.length === 0){
+      alert("Your cart is empty. Add items before placing an order.");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/Pages/loginPage");
+      return;
+    }
+    try{
+      for(const item of items){
+        for(const orderId of item.orderIds){
+          await fetch(`http://localhost:5000/api/users/me/cart/${orderId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+      }
+      setItems([]);
+      alert("Thank you! Your order has been placed successfully.");
+      navigate("/Pages/productListPage");
+    }catch(err){
+      console.error("Failed to place order:", err);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
     <div className="checkout-page container py-4">
+      <div className="tile-pattern">
+        <div className="tile-3"></div>
+      </div>
       <h1 className="mb-4 text-center">Checkout</h1>
 
       <div className="row gy-4">
@@ -174,13 +248,14 @@ const CheckoutPage: React.FC = () => {
                     />
                   </div>
                 </div>
-
                 <button
-                  type="submit"
-                  className="btn btn-primary w-100 mt-4 place-order-btn"
-                >
-                  Place Order
-                </button>
+                  type="button"
+                    onClick={(e) => handleSubmit(e as any)} // cast to satisfy FormEvent
+                    className="btn btn-primary w-100 mt-4 place-order-btn"
+                    disabled={items.length === 0}
+                  >
+                    Place Order
+                  </button>
               </div>
             </div>
           </form>
@@ -192,18 +267,30 @@ const CheckoutPage: React.FC = () => {
             <div className="card-header fw-semibold">Order Summary</div>
             <div className="card-body">
               <ul className="list-unstyled order-summary-list mb-3">
-                {items.map((item) => (
-                  <li
-                    key={item.id}
-                    className="order-summary-item d-flex justify-content-between"
-                  >
-                    <div>
-                      <div className="order-item-title">{item.title}</div>
-                      <div className="text-muted small">Qty: {item.qty}</div>
-                    </div>
-                    <div>${(item.price * item.qty).toFixed(2)}</div>
-                  </li>
-                ))}
+                {loading && <p>Loading order summary...</p>}
+
+                {!loading && items.length === 0 && (
+                  <p>Your cart is empty.</p>
+                )}
+
+                {!loading && items.length > 0 &&
+                  items.map((item) => (
+                    <li
+                      key={item.movieId}
+                      className="order-summary-item"
+                    >
+                      <div>
+                        <div className="order-item-title">{item.title}</div>
+                        <div className="text-muted small">
+                          Qty: {item.quantity}
+                        </div>
+                      </div>
+                      <div>
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </div>
+                    </li>
+                  ))
+                }
               </ul>
 
               <div className="order-totals">

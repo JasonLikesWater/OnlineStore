@@ -2,6 +2,8 @@
 
 ## Prerequisites
 
+How To run the website
+
 be in the `Back_End_C` directory
 
 ensure you have .NET SDK 8.0 or higher installed
@@ -28,3 +30,11 @@ be in the `Back_End_C` directory and run:
 dotnet build
 dotnet run
 ```
+
+Then open a seperate terminal and get into the Front_End\PnlineStoreReact directory. Once in said directory run the following commands.
+
+```bash
+npm install
+npm run dev
+```
+After running that command the terminal should display a local url. Press ctrl and click the url to open the website.
