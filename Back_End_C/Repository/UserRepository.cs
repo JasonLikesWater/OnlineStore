@@ -129,23 +129,32 @@ public class UserRepository : IUserRepository
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
         var cmd = new SqlCommand(
-            @"SELECT O.OrderId, C.CartId, M.MovieId, M.Title, M.Price
-              FROM Orders O
-              INNER JOIN Carts C ON O.CartId = C.CartId
-              INNER JOIN Movies M ON O.MovieId = M.MovieId
-              WHERE C.UserId = @UserId", conn);
+            @"SELECT
+            Carts.CartId,
+            Orders.OrderId,
+            Movies.MovieId,
+            Movies.Title,
+            Movies.Price,
+            Genres.Name AS Category
+            FROM Carts
+            LEFT JOIN Orders ON Carts.CartId = Orders.CartId
+            LEFT JOIN Movies ON Orders.MovieId = Movies.MovieId
+            LEFT JOIN Genres ON Movies.GenreId = Genres.GenreId
+            WHERE Carts.UserId = @UserId
+            AND Orders.OrderId IS NOT NULL", conn);
         cmd.Parameters.AddWithValue("@UserId", userId);
         using var reader = await cmd.ExecuteReaderAsync();
         while(await reader.ReadAsync()){
             carts.Add(new
             {
-                CartId = Convert.ToInt32(reader["CartId"]),
-                OrderId = Convert.ToInt32(reader["OrderId"]),
-                MovieId = Convert.ToInt32(reader["MovieId"]),
-                Title = reader["Title"] is DBNull ? null : reader["Title"].ToString(),
-                Price = reader["Price"] is DBNull ? (double?)null : Convert.ToDouble(reader["Price"])
+                CartId = (int)reader["CartId"],
+                OrderId = (int)reader["OrderId"],
+                MovieId = (int)reader["MovieId"],
+                Title = reader["Title"].ToString(),
+                Price = reader["Price"] is DBNull ? 0m : Convert.ToDecimal(reader["Price"]),
+                Category = reader["Category"].ToString()
             });
-            }
+        }
         return carts;
     }
 

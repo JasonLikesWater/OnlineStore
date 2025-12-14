@@ -30,6 +30,7 @@ string connString = builder.Configuration.GetConnectionString("DefaultConnection
 
 builder.Services.AddScoped<OnlineStore.Repository.UserRepository>(s => new OnlineStore.Repository.UserRepository(connString));
 builder.Services.AddScoped<OnlineStore.Repository.MovieRepository>(s => new OnlineStore.Repository.MovieRepository(connString));
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 
 builder.Services.AddControllers();
 

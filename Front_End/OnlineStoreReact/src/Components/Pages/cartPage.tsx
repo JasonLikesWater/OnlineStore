@@ -78,6 +78,7 @@ const CartPage: React.FC = () => {
               movieId: item.movieId,
               title: item.title,
               price: item.price,
+              category: item.category,
               quantity: 1,
               orderIds: item.orderId ? [item.orderId] : []
             });
@@ -95,75 +96,77 @@ const CartPage: React.FC = () => {
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
-    <div className="cart-page container py-4">
+    <div>
       <div className="tile-pattern">
         <div className="tile-3"></div>
       </div>
-      {/* Top: back / continue shopping */}
-      <button
-        type="button"
-        className="cart-back-btn d-inline-flex align-items-center mb-4"
-        onClick={() => navigate("/Pages/productListPage")}
-      >
-        <FaArrowLeft className="me-2" />
-        <span>Continue shopping</span>
-      </button>
+      <div className="cart-page container py-4">
+        {/* Top: back / continue shopping */}
+        <button
+          type="button"
+          className="cart-back-btn d-inline-flex align-items-center mb-4"
+          onClick={() => navigate("/Pages/productListPage")}
+        >
+          <FaArrowLeft className="me-2" />
+          <span>Continue shopping</span>
+        </button>
 
-      {/* Cart items */}
-      <div className="cart-items">
-        {loading && <p>Loading your cart...</p>}
-        {!loading && items.length === 0 && <p>Your cart is empty.</p>}
-        {!loading && items.length > 0 && items.map((item) => (
-          <div key={item.movieId} className="cart-item-card d-flex">
-            <div className="cart-item-details flex-grow-1">
-              <h3 className="cart-item-title">{item.title}</h3>
-              <p className="cart-item-meta">
-                Quantity: {item.quantity}
-                <br />
-                <span
-                  className="remove-one-text"
-                  onClick={() => handleRemoveOne(item.movieId)}
-                >
-                  Remove one
-                </span>
-              </p>
+        {/* Cart items */}
+        <div className="cart-items">
+          {loading && <p>Loading your cart...</p>}
+          {!loading && items.length === 0 && <p>Your cart is empty.</p>}
+          {!loading && items.length > 0 && items.map((item) => (
+            <div key={item.movieId} className="cart-item-card d-flex">
+              <div className="cart-item-details flex-grow-1">
+                <h3 className="cart-item-title">{item.title}</h3>
+                <p className="cart-item-meta">
+                  Quantity: {item.quantity}
+                  <br />
+                  <span
+                    className="remove-one-text"
+                    onClick={() => handleRemoveOne(item.movieId)}
+                  >
+                    Remove one
+                  </span>
+                </p>
+              </div>
+              <div className="cart-item-price">
+                {(item.price * item.quantity).toFixed(2)} <span className="currency">$</span>
+              </div>
             </div>
-            <div className="cart-item-price">
-              {(item.price * item.quantity).toFixed(2)} <span className="currency">$</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom: promo + subtotal + checkout */}
-      <div className="cart-footer d-flex flex-column flex-md-row align-items-md-center justify-content-between mt-4">
-        <div className="promo-wrapper mb-3 mb-md-0">
-          <div className="promo-input-wrapper">
-            <input
-              type="text"
-              className="form-control promo-input"
-              placeholder="Promo code?"
-            />
-          </div>
+          ))}
         </div>
 
-        <div className="cart-summary text-md-end">
-          <div className="cart-subtotal mb-2">
-            Subtotal: <span>${loading ? "0.00" : subtotal.toFixed(2)}</span>
+        {/* Bottom: promo + subtotal + checkout */}
+        <div className="cart-footer d-flex flex-column flex-md-row align-items-md-center justify-content-between mt-4">
+          <div className="promo-wrapper mb-3 mb-md-0">
+            <div className="promo-input-wrapper">
+              <input
+                type="text"
+                className="form-control promo-input"
+                placeholder="Promo code?"
+              />
+            </div>
           </div>
-          <button
-            className="checkout-button"
-            onClick={() => {
-              const token = localStorage.getItem("token");
-              if (!token) {
-                navigate("/Pages/loginPage");
-              } else {
-                navigate("/Pages/checkoutPage");
-              }
-            }}
-          >
-            CHECKOUT →
-          </button>
+
+          <div className="cart-summary text-md-end">
+            <div className="cart-subtotal mb-2">
+              Subtotal: <span>${loading ? "0.00" : subtotal.toFixed(2)}</span>
+            </div>
+            <button
+              className="checkout-button"
+              onClick={() => {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                  navigate("/Pages/loginPage");
+                } else {
+                  navigate("/Pages/checkoutPage");
+                }
+              }}
+            >
+              CHECKOUT →
+            </button>
+          </div>
         </div>
       </div>
     </div>
