@@ -5,7 +5,7 @@ using OnlineStore.Models;
 
 namespace OnlineStore.Repository;
 
-public class UserRepository
+public class UserRepository : IUserRepository
 {
     private readonly string _connectionString;
     public UserRepository(string connectionString)
@@ -156,13 +156,11 @@ public class UserRepository
         using var reader = await cmd.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
-            reviews.Add(new Review
-            {
-                ReviewId = (int)reader["ReviewId"],
-                CriticId = reader["CriticId"] as int?,
-                ReviewDescription = reader["ReviewDescription"].ToString()!,
-                Rating = (int)reader["Rating"]
-            });
+            var reviewId = (int)reader["ReviewId"];
+            var criticId = reader["CriticId"] is DBNull ? null : (int?)reader["CriticId"];
+            var reviewDescription = reader["ReviewDescription"].ToString()!;
+            var rating = (int)reader["Rating"];
+            reviews.Add(new Review(reviewId, criticId, reviewDescription, rating));
         }
         return reviews;
     }

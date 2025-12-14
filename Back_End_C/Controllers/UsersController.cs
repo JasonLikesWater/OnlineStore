@@ -9,7 +9,7 @@ using OnlineStore.Models;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class UsersController : ControllerBase, IUserController
 {
     private readonly UserRepository _userRepo;
     private readonly IConfiguration _config;

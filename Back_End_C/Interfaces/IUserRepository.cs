@@ -1,0 +1,16 @@
+using OnlineStore.Models;
+
+public interface IUserRepository
+{
+    Task<bool> UsernameExistsAsync(string username);
+    Task<bool> EmailExistsAsync(string email);
+    Task<User> CreateUserAsync(User newUser);
+    Task CreateCartForUserAsync(int userId);
+    Task<User?> GetByUsernameAsync(string username);
+    Task<User?> GetByEmailAsync(string email);
+    Task<User?> GetByIdAsync(int userId);
+    Task<List<object>> GetCartsForUserAsync(int userId);
+    Task<List<Review>> GetReviewsByUserAsync(int userId);
+    Task<User?> UpdateUserAsync(int userId, UpdateUserRequest request);
+    Task<bool> DeleteUserAsync(int userId);
+}

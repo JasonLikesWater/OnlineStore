@@ -1,5 +1,7 @@
 using System.Data.SqlClient;
-using Online_Store.Models;
+using OnlineStore.Models;
+using Microsoft.Data.SqlClient;
+
 
 namespace Online_Store.Repository
 {
