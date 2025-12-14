@@ -1,21 +1,4 @@
-// function LoginPage() {
-//   return (
-//     <>
-//       {" "}
-//       <figure className="text-center">
-//         <blockquote className="blockquote">
-//           <p>This is the Login page</p>
-//         </blockquote>
-//       </figure>
-//     </>
-//   );
-// }
-
-// export default LoginPage;
-
-
-// src/Components/Pages/loginPage.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
@@ -24,6 +7,13 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();

@@ -32,9 +32,8 @@ public class SalesController : ControllerBase {
     }
 
     [HttpGet("activeMovieSales")]
-    public IActionResult GetActiveMovieSales()
-    {
-        var movieSales = (_saleRepo as SaleRepository)?.GetActiveMovieSales();
+    public IActionResult GetActiveMovieSales(){
+        var movieSales = _saleRepo.GetActiveMovieSales();
         return Ok(movieSales);
     }
 }
