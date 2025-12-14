@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Data.SqlClient;
-using Online_Store.Models;
+using Microsoft.Data.SqlClient;
+using OnlineStore.Models;
 
 namespace Online_Store.Repository
 {

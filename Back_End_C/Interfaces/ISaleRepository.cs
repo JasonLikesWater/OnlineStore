@@ -1,4 +1,4 @@
-using Online_Store.Models;
+using OnlineStore.Models;
 
 public interface ISaleRepository
 {
