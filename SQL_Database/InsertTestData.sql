@@ -106,11 +106,9 @@ VALUES
 
 INSERT INTO Sales (Discount, StartDate, EndDate, Category)
 VALUES
-(10, '2024-01-01', '2024-01-10', 'Action Movies'),
-(5, '2024-02-01', '2024-02-28', 'Sci-Fi'),
-(15, '2024-03-01', '2024-03-10', 'Oscar Films'),
-(20, '2024-04-01', '2024-04-15', 'Sci-Fi Hits'),
-(25, '2024-05-01', '2024-05-07', 'Action Classics');
+(10, '2024-01-01', '2026-01-10', 'Action Movies'),
+(5, '2024-02-01', '2026-02-28', 'Sci-Fi'),
+(25, '2024-05-01', '2026-05-07', 'Drama');
 
 -- Inception = Action, Sci-Fi, Thriller
 INSERT INTO MovieGenres (MovieId, GenreId)
@@ -184,8 +182,15 @@ VALUES
 
 INSERT INTO MovieSales (MovieId, SaleId)
 VALUES
-(5, 3),
-(8, 4),
-(10, 4),
-(12, 5),
-(7, 5);
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 3),
+(5, 1),
+(6, 3),
+(7, 1),
+(8, 2),
+(10, 2),
+(12, 1),
+(13, 3),
+(14, 2);

@@ -54,6 +54,7 @@ export interface CartItem {
   title: string;
   price: number;
   quantity: number;
+  category: string;
   orderIds: number[];
 }
 
@@ -62,4 +63,12 @@ export type DecodedToken = {
   exp: number;
   UserId: string;
   Username: string;
+}
+
+export interface Sale {
+  saleId: number;
+  discount: number;
+  startDate: string;
+  endDate: string;
+  category: string;
 }

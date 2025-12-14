@@ -1,63 +1,120 @@
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import type { CartItem } from "../../interfaces";
+import type { CartItem, Sale } from "../../interfaces";
 import "./checkoutPage.css";
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [movieSales, setMovieSales] = useState<{ movieId: number; saleId: number }[]>([]);
+  const getItemSaleDiscount = (item: CartItem) => {
+    const movieSale = movieSales.find(ms => ms.movieId === item.movieId);
+    if (!movieSale) return null;
+    const sale = sales.find(s => s.saleId === movieSale.saleId);
+    return sale?.discount ?? null;
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if(!token){
-      navigate("/Pages/loginPage");
-      return;
-    }
-    const fetchCart = async () => {
-      try{
-        const res = await fetch("http://localhost:5000/api/users/me/carts", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if(!res.ok){
-          navigate("/Pages/loginPage");
-          return;
-        }
-        const data = await res.json();
-        const groupedItems: CartItem[] = [];
-        data.forEach((item: any) => {
-          const existing = groupedItems.find(
-            i => i.movieId === item.movieId
-          );
-          if(existing){
-            existing.quantity += 1;
-            if (item.orderId) existing.orderIds.push(item.orderId);
-          }else{
-            groupedItems.push({
-              cartId: item.cartId,
-              movieId: item.movieId,
-              title: item.title,
-              price: item.price,
-              quantity: 1,
-              orderIds: item.orderId ? [item.orderId] : [],
-            });
-          }
-        });
-        setItems(groupedItems);
-      }catch(err){
-        console.error("Failed to load cart:", err);
-      }finally{
-        setLoading(false);
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/Pages/loginPage");
+    return;
+  }
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [salesRes, cartRes] = await Promise.all([
+        fetch("http://localhost:5000/api/sales/active"),
+        fetch("http://localhost:5000/api/users/me/carts", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+      let salesData: Sale[] = [];
+      if (salesRes && salesRes.ok) {
+        try { salesData = await salesRes.json(); }
+        catch (err) { console.warn("Failed to parse sales JSON:", err); salesData = []; }
+      } else {
+        console.warn("Sales fetch not OK", salesRes && salesRes.status);
       }
-    };
-    fetchCart();
-  }, [navigate]);
+      const movieSalesRes = await fetch("http://localhost:5000/api/sales/activeMovieSales");
+      let movieSalesData: { movieId: number; saleId: number }[] = [];
+      if (movieSalesRes.ok) {
+        movieSalesData = await movieSalesRes.json();
+      }
+      setMovieSales(movieSalesData);
+      setSales(salesData);
+      console.debug("Fetched sales:", salesData);
+      if (!cartRes) {
+        console.error("Cart response missing");
+        setItems([]);
+        return;
+      }
+      if (cartRes.status === 401) {
+        navigate("/Pages/loginPage");
+        return;
+      }
+      if (!cartRes.ok) {
+        let bodyText = "";
+        try { bodyText = await cartRes.text(); } catch {}
+        console.error("Cart fetch failed", cartRes.status, bodyText);
+        setItems([]);
+        return;
+      }
+      const rawCart = await cartRes.json();
+      console.debug("Raw /me/carts response:", rawCart);
+      if (!Array.isArray(rawCart)) {
+        console.warn("/me/carts did not return an array:", rawCart);
+        setItems([]);
+        return;
+      }
+      const validRows = rawCart.filter((r: any) => r && r.movieId != null);
+      console.debug("Filtered valid cart rows:", validRows);
+      const groupedItems: CartItem[] = [];
+      validRows.forEach((row: any) => {
+        const movieIdNum = typeof row.movieId === "number" ? row.movieId : Number(row.movieId);
+        const priceNum = typeof row.price === "number" ? row.price : Number(row.price) || 0;
+        const existing = groupedItems.find(i => i.movieId === movieIdNum);
+        if (existing) {
+          existing.quantity += 1;
+          if (row.orderId) existing.orderIds.push(row.orderId);
+        } else {
+          groupedItems.push({
+            cartId: row.cartId,
+            movieId: movieIdNum,
+            title: row.title ?? "Untitled",
+            price: priceNum,
+            category: row.category ?? "Uncategorized",
+            quantity: 1,
+            orderIds: row.orderId ? [row.orderId] : [],
+          });
+        }
+      });
+      console.debug("Grouped cart items:", groupedItems);
+      setItems(groupedItems);
+    } catch (err) {
+      console.error("Error fetching checkout data:", err);
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [navigate]);
+  const getItemDiscount = (item: CartItem) => {
+    const movieSale = movieSales.find((ms: { movieId: number; saleId: number }) => ms.movieId === item.movieId);
+    if (!movieSale) return 0;
+    const sale = sales.find(s => s.saleId === movieSale.saleId);
+    if (!sale) return 0;
+    return item.price * item.quantity * (sale.discount / 100);
+  };
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = 4.99;
-  const discount = 0;
+  const shipping = items.length > 0 ? 4.99 : 0;
+  const discount = items.reduce((sum, item) => sum + getItemDiscount(item), 0);
   const total = subtotal + shipping - discount;
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,10 +148,11 @@ const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <div className="checkout-page container py-4">
+    <div>
       <div className="tile-pattern">
         <div className="tile-3"></div>
       </div>
+    <div className="checkout-page container py-4">
       <h1 className="mb-4 text-center">Checkout</h1>
 
       <div className="row gy-4">
@@ -284,6 +342,11 @@ const CheckoutPage: React.FC = () => {
                         <div className="text-muted small">
                           Qty: {item.quantity}
                         </div>
+                        {getItemSaleDiscount(item) && (
+                          <div className="text-success small">
+                            {getItemSaleDiscount(item)}% off
+                          </div>
+                        )}
                       </div>
                       <div>
                         ${(item.price * item.quantity).toFixed(2)}
@@ -324,6 +387,7 @@ const CheckoutPage: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

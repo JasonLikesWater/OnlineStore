@@ -51,8 +51,15 @@ const LoginPage: React.FC = () => {
   }
 };
   return (
-    <div className="login-page-wrapper">
-      <div className="login-card">
+    // outer wrapper controls stacking context for tile + content
+    <div style={{ position: "relative", minHeight: "100vh" }} className="login-page-wrapper">
+      {/* Tile: absolute and behind content */}
+      <div className="tile-pattern" style={{zIndex: 0}}>
+        <div className="tile-3" />
+      </div>
+
+      {/* Content: above tile */}
+      <div className="login-card" style={{ position: "relative", zIndex: 1 }}>
         <h1 className="login-title">Sign In</h1>
 
         {error && <div className="login-error">{error}</div>}
