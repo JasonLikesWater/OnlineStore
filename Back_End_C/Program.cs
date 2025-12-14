@@ -31,6 +31,9 @@ string connString = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddScoped<OnlineStore.Repository.UserRepository>(s => new OnlineStore.Repository.UserRepository(connString));
 builder.Services.AddScoped<OnlineStore.Repository.MovieRepository>(s => new OnlineStore.Repository.MovieRepository(connString));
 
+// Register IMovieRepository so controllers can receive it
+builder.Services.AddScoped<IMovieRepository>(sp => sp.GetRequiredService<MovieRepository>());
+
 builder.Services.AddControllers();
 
 // 2. CORS Service Added

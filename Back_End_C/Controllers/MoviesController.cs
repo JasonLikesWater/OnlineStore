@@ -14,10 +14,10 @@ namespace OnlineStore.Controllers;
 [ApiController] // Indicates this class is an API controller
 public class MoviesController : ControllerBase
 {
-    private readonly MovieRepository _movieRepository;
+    private readonly IMovieRepository _movieRepository;
 
     // Constructor for Dependency Injection (assuming setup in Program.cs)
-    public MoviesController(MovieRepository movieRepository)
+    public MoviesController(IMovieRepository movieRepository)
     {
         _movieRepository = movieRepository;
     }

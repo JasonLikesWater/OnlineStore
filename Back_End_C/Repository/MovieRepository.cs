@@ -6,7 +6,7 @@ using OnlineStore.Models; // <-- Must import the model definitions
 
 namespace OnlineStore.Repository;
 
-public class MovieRepository
+public class MovieRepository : IMovieRepository
 {
     private readonly string _connectionString;
 
