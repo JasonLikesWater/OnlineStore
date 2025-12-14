@@ -166,6 +166,46 @@ public class UsersController : ControllerBase, IUserController
         if (!success) return NotFound(new { error = "User not found" });
         return Ok(new { message = "User, cart, and all cart orders deleted successfully" });
     }
+
+    /**
+     * Add a movie to the logged-in user's cart
+     *
+     * POST /api/users/me/cart
+     */
+    [Authorize]
+    [HttpPost("me/carts")]
+    public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request){
+        if(request.MovieId <= 0){
+            return BadRequest(new { error = "Invalid movie id" });
+        }
+        var userId = int.Parse(User.FindFirstValue("UserId")!);
+        var orderId = await _userRepo.AddMovieToCartAsync(userId, request.MovieId);
+        return Ok(new { message = "Added to cart", orderId });
+    }
+
+    /**
+     * Remove an order from the logged-in user's cart
+     *
+     * DELETE /api/users/me/cart/{orderId}
+     */
+    [Authorize]
+    [HttpDelete("me/cart/{orderId}")]
+    public async Task<IActionResult> RemoveFromCart(int orderId){
+        if(orderId <= 0){
+            return BadRequest(new { error = "Invalid order id" });
+        }
+        var userId = int.Parse(User.FindFirstValue("UserId")!);
+        var success = await _userRepo.RemoveOrderFromCartAsync(userId, orderId);
+        if(!success){
+            return NotFound(new { error = "Order not found in user's cart" });
+        }
+        return Ok(new { message = "Order removed from cart" });
+    }
+}
+
+public class AddToCartRequest
+{
+    public int MovieId { get; set; }
 }
 
 public class LoginRequest

@@ -8,6 +8,44 @@ const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const [items,setItems] = React.useState<CartItem[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleRemoveOne = async (movieId: number) => {
+    const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/Pages/loginPage");
+      return;
+    }
+    const item = items.find(i => i.movieId === movieId);
+    if(!item || item.orderIds.length === 0) return;
+    const orderIdToRemove = item.orderIds[0];
+    try{
+      const res = await fetch(
+        `http://localhost:5000/api/users/me/cart/${orderIdToRemove}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if(!res.ok) return;
+      setItems(prev =>
+        prev
+          .map(i =>
+            i.movieId === movieId
+              ? {
+                  ...i,
+                  quantity: i.quantity - 1,
+                  orderIds: i.orderIds.slice(1)
+                }
+              : i
+          )
+          .filter(i => i.quantity > 0)
+      );
+    }catch(err){
+      console.error("Failed to remove item:", err);
+    }
+  };
   React.useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -27,20 +65,21 @@ const CartPage: React.FC = () => {
           return;
         }
         const data = await res.json();
-        console.log("RAW CART DATA:", data);
+        console.log("API /me/carts raw response:", data);
         const groupedItems: CartItem[] = [];
         data.forEach((item: any) => {
           const existing = groupedItems.find(i => i.movieId === item.movieId);
-          if (existing) {
+          if(existing){
             existing.quantity += 1;
-          } else {
+            if (item.orderId) existing.orderIds.push(item.orderId);
+            }else{
             groupedItems.push({
               cartId: item.cartId,
-              orderId: item.orderId,
               movieId: item.movieId,
               title: item.title,
               price: item.price,
-              quantity: 1
+              quantity: 1,
+              orderIds: item.orderId ? [item.orderId] : []
             });
           }
         });
@@ -57,11 +96,14 @@ const CartPage: React.FC = () => {
 
   return (
     <div className="cart-page container py-4">
+      <div className="tile-pattern">
+        <div className="tile-3"></div>
+      </div>
       {/* Top: back / continue shopping */}
       <button
         type="button"
         className="cart-back-btn d-inline-flex align-items-center mb-4"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/Pages/productListPage")}
       >
         <FaArrowLeft className="me-2" />
         <span>Continue shopping</span>
@@ -72,11 +114,18 @@ const CartPage: React.FC = () => {
         {loading && <p>Loading your cart...</p>}
         {!loading && items.length === 0 && <p>Your cart is empty.</p>}
         {!loading && items.length > 0 && items.map((item) => (
-          <div key={item.orderId ?? item.cartId} className="cart-item-card d-flex">
+          <div key={item.movieId} className="cart-item-card d-flex">
             <div className="cart-item-details flex-grow-1">
               <h3 className="cart-item-title">{item.title}</h3>
               <p className="cart-item-meta">
                 Quantity: {item.quantity}
+                <br />
+                <span
+                  className="remove-one-text"
+                  onClick={() => handleRemoveOne(item.movieId)}
+                >
+                  Remove one
+                </span>
               </p>
             </div>
             <div className="cart-item-price">
@@ -104,7 +153,14 @@ const CartPage: React.FC = () => {
           </div>
           <button
             className="checkout-button"
-            onClick={() => navigate("/Pages/checkoutPage")}
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/Pages/loginPage");
+              } else {
+                navigate("/Pages/checkoutPage");
+              }
+            }}
           >
             CHECKOUT →
           </button>

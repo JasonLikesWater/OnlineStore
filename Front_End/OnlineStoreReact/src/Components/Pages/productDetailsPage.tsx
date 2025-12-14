@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { type MovieDetails, type DetailParams } from "../../interfaces";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 
@@ -33,30 +33,46 @@ async function fetchMovieById(
 // ------------------------------------------
 
 function ProductDetailsPage(): React.ReactElement {
+  const navigate = useNavigate();
   var { productId } = useParams<DetailParams>();
   var [movie, setMovie] = useState<MovieDetails | null>(null);
   var [isLoading, setIsLoading] = useState(true);
   var [error, setError] = useState<string | null>(null);
 
-  // Data Fetching Effect (With AbortController for cleanup) - Kept as is
+  const handleAddToCart = async () => {
+    const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/Pages/loginPage");
+      return;
+    }
+    if(!movie) return;
+    try{
+      await fetch(`${API_URL}/users/me/carts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ movieId: movie.movieId }),
+      });
+      alert(`Added "${movie.title}" to your cart!`);
+    }catch(err){
+      console.error("Add to cart error:", err);
+    }
+  };
   useEffect(() => {
     if (productId) {
       const controller = new AbortController();
       const signal = controller.signal;
-
       setIsLoading(true);
       setError(null);
-
-      // fetchMovieById now returns the single object, so `data` is `MovieDetails`
       fetchMovieById(productId, signal)
         .then(function (data) {
           setMovie(data);
         })
         .catch(function (err) {
           if (err.name === "AbortError") return;
-
           console.error("Fetch error:", err);
-          // Catching the error thrown by fetchMovieById for empty array
           setError(err.message || "An unknown error occurred during fetch.");
         })
         .finally(function () {
@@ -64,7 +80,6 @@ function ProductDetailsPage(): React.ReactElement {
             setIsLoading(false);
           }
         });
-
       return () => {
         controller.abort();
       };
@@ -208,13 +223,13 @@ function ProductDetailsPage(): React.ReactElement {
                 </div>
               </div>
 
-              <a
-                href="#"
+              <button
                 className="btn btn-outline-light me-2 align-items-center"
+                onClick={handleAddToCart}
               >
                 <MdOutlineAddShoppingCart className="me-1" />
                 Add to Cart
-              </a>
+              </button>
             </div>
           </div>
 

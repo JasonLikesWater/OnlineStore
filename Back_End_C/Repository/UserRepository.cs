@@ -124,25 +124,28 @@ public class UserRepository : IUserRepository
         return null;
     }
 
-    public async Task<List<object>> GetCartsForUserAsync(int userId)
-    {
+    public async Task<List<object>> GetCartsForUserAsync(int userId){
         var carts = new List<object>();
         using var conn = new SqlConnection(_connectionString);
         await conn.OpenAsync();
-        var cmd = new SqlCommand("SELECT Carts.CartId, Orders.OrderId, Movies.MovieId, Movies.Title, Movies.Price FROM Carts LEFT JOIN Orders ON Carts.CartId = Orders.CartId LEFT JOIN Movies ON Orders.MovieId = Movies.MovieId WHERE Carts.UserId = @UserId", conn);
+        var cmd = new SqlCommand(
+            @"SELECT O.OrderId, C.CartId, M.MovieId, M.Title, M.Price
+              FROM Orders O
+              INNER JOIN Carts C ON O.CartId = C.CartId
+              INNER JOIN Movies M ON O.MovieId = M.MovieId
+              WHERE C.UserId = @UserId", conn);
         cmd.Parameters.AddWithValue("@UserId", userId);
         using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
+        while(await reader.ReadAsync()){
             carts.Add(new
             {
-                CartId = reader["CartId"],
-                OrderId = reader["OrderId"] is DBNull ? null : reader["OrderId"],
-                MovieId = reader["MovieId"] is DBNull ? null : reader["MovieId"],
-                Title = reader["Title"]?.ToString(),
-                Price = reader["Price"] is DBNull ? null : reader["Price"]
+                CartId = Convert.ToInt32(reader["CartId"]),
+                OrderId = Convert.ToInt32(reader["OrderId"]),
+                MovieId = Convert.ToInt32(reader["MovieId"]),
+                Title = reader["Title"] is DBNull ? null : reader["Title"].ToString(),
+                Price = reader["Price"] is DBNull ? (double?)null : Convert.ToDouble(reader["Price"])
             });
-        }
+            }
         return carts;
     }
 
@@ -232,5 +235,41 @@ public class UserRepository : IUserRepository
         cmdDeleteUser.Parameters.AddWithValue("@UserId", userId);
         var rows = await cmdDeleteUser.ExecuteNonQueryAsync();
         return rows > 0;
+    }
+
+    public async Task<int> AddMovieToCartAsync(int userId, int movieId){
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+        var cartIdObj = await new SqlCommand("SELECT CartId FROM Carts WHERE UserId = @UserId", conn){
+            Parameters = { new SqlParameter("@UserId", userId) }
+        }.ExecuteScalarAsync();
+        if(cartIdObj == null)
+            throw new Exception("Cart not found");
+        var cartId = Convert.ToInt32(cartIdObj);
+        var cmd = new SqlCommand("INSERT INTO Orders (CartId, MovieId) OUTPUT INSERTED.OrderId VALUES (@CartId, @MovieId)", conn);
+        cmd.Parameters.AddWithValue("@CartId", cartId);
+        cmd.Parameters.AddWithValue("@MovieId", movieId);
+        var result = await cmd.ExecuteScalarAsync();
+        if(result == null){
+            throw new Exception("Failed to add movie to cart");
+        }
+        return Convert.ToInt32(result);
+    }
+
+    public async Task<bool> RemoveOrderFromCartAsync(int userId, int orderId){
+        using var conn = new SqlConnection(_connectionString);
+        await conn.OpenAsync();
+        var cartIdObj = await new SqlCommand("SELECT CartId FROM Carts WHERE UserId = @UserId", conn){
+            Parameters = { new SqlParameter("@UserId", userId) }
+        }.ExecuteScalarAsync();
+        if(cartIdObj == null){
+            return false;
+        }
+        var cartId = Convert.ToInt32(cartIdObj);
+        var cmd = new SqlCommand("DELETE FROM Orders WHERE OrderId = @OrderId AND CartId = @CartId", conn);
+        cmd.Parameters.AddWithValue("@OrderId", orderId);
+        cmd.Parameters.AddWithValue("@CartId", cartId);
+        var rowsAffected = await cmd.ExecuteNonQueryAsync();
+        return rowsAffected > 0;
     }
 }
