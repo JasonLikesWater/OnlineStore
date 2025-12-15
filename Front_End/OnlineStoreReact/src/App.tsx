@@ -8,6 +8,7 @@ import LoginPage from "./Components/Pages/loginPage.tsx";
 import SalesPage from "./Components/Pages/salesPage.tsx";
 import ProductDetailsPage from "./Components/Pages/productDetailsPage";
 import ProtectedRoute from "./ProtectedRoute";
+import SearchResultsPage from "./Components/Pages/searchResultsPage.tsx";
 import "./App.css";
 
 function App() {
@@ -21,10 +22,21 @@ function App() {
           path="/Pages/productDetailsPage/:productId"
           element={<ProductDetailsPage />}
         />
-        <Route path="/Pages/cartPage" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+        <Route
+          path="/Pages/cartPage"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/Pages/checkoutPage" element={<CheckoutPage />} />
         <Route path="/Pages/salesPage" element={<SalesPage />} />
         <Route path="/Pages/loginPage" element={<LoginPage />} />
+        <Route
+          path="/Pages/searchResultsPage"
+          element={<SearchResultsPage />}
+        />
       </Routes>
     </BrowserRouter>
   );

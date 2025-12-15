@@ -1,13 +1,15 @@
 import logo from "./logo.png";
-import { FaShoppingCart, FaUserCircle, FaSearch } from "react-icons/fa"; // Imported FaSearch icon
+import { FaShoppingCart, FaUserCircle, FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef, useLayoutEffect} from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import type { DecodedToken } from "../../../interfaces.ts"
+import type { DecodedToken } from "../../../interfaces.ts";
 
 function NavBar() {
-  // Define a style for the text links to ensure they are white against the dark background
   const textLinkStyle = { color: "white" };
+
+  // --- NEW STATE FOR SEARCH ---
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [user, setUser] = useState<any>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -18,21 +20,36 @@ function NavBar() {
 
   const navigate = useNavigate();
 
+  // --- NEW HANDLER FOR SEARCH SUBMISSION ---
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevents full page reload on form submission
+
+    const trimmedTerm = searchTerm.trim();
+
+    if (trimmedTerm) {
+      // 1. Clear the search bar text
+      setSearchTerm("");
+
+      // 2. Navigate to the search results page
+      navigate(`/Pages/searchResultsPage?q=${encodeURIComponent(trimmedTerm)}`);
+    }
+  };
+
   useEffect(() => {
     const loadUser = () => {
       const stored = localStorage.getItem("user");
       const token = localStorage.getItem("token");
-      if(stored && token){
-        try{
+      if (stored && token) {
+        try {
           const decoded = jwtDecode<DecodedToken>(token);
-          if(decoded.exp * 1000 < Date.now()){
+          if (decoded.exp * 1000 < Date.now()) {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             setUser(null);
             return;
           }
           setUser(JSON.parse(stored));
-        }catch{
+        } catch {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
         }
@@ -47,7 +64,7 @@ function NavBar() {
 
   useLayoutEffect(() => {
     const currentRef = user ? buttonRef.current : loginRef.current;
-    if(currentRef){
+    if (currentRef) {
       const width = Math.max(currentRef.offsetWidth, 80);
       setButtonWidth(width);
     }
@@ -73,12 +90,11 @@ function NavBar() {
           <img src={logo} width="200" height="50" alt="Brand Logo" />
         </Link>
 
-        {/* Links Group (Text/Tertiary Buttons) */}
-        {/* me-auto pushes this group to the left and the next group to the right */}
+        {/* Links Group */}
         <div className="d-flex align-items-center me-auto">
           <Link
             to="/"
-            className="nav-link nav-text-link me-3" // Increased margin for spacing
+            className="nav-link nav-text-link me-3"
             style={textLinkStyle}
           >
             Home
@@ -101,34 +117,43 @@ function NavBar() {
           </Link>
         </div>
 
-        {/* Buttons Group (Includes the new Search Bar) */}
+        {/* Buttons Group (Includes the Search Bar) */}
         <div className="d-flex align-items-center">
-          {/* 🔍 NEW SEARCH BAR 🔍 */}
-          <div className="input-group me-3" style={{ width: "250px" }}>
+          {/* 🔍 COMPLETED SEARCH BAR FORM 🔍 */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="input-group me-3"
+            style={{ width: "250px" }}
+          >
             <input
               type="text"
-              className="form-control form-control-sm" // Use form-control-sm for smaller height
+              className="form-control form-control-sm"
               placeholder="Search products..."
               aria-label="Search products"
-              aria-describedby="button-addon2"
+              value={searchTerm} // Controlled component
+              onChange={(e) => setSearchTerm(e.target.value)} // Updates state on change
             />
             <button
               className="btn btn-outline-light btn-sm"
-              type="button"
-              id="button-addon2"
+              type="submit" // Triggers handleSearchSubmit
             >
               <FaSearch />
             </button>
-          </div>
+          </form>
           {/* ------------------- */}
 
+          {/* User/Login Button Group */}
           {user ? (
             <div className="dropdown me-3" style={{ position: "relative" }}>
               <button
                 ref={buttonRef}
                 className="btn btn-sm btn-outline-light"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={{ borderRadius: "5px", cursor: "pointer", minWidth: "80px" }}
+                style={{
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  minWidth: "80px",
+                }}
               >
                 {user.username}
               </button>
@@ -160,7 +185,7 @@ function NavBar() {
             </Link>
           )}
 
-          {/* Cart Button (Primary/Solid Style - Main CTA) */}
+          {/* Cart Button (Primary CTA) */}
           <button
             className="btn btn-sm btn-outline-light d-flex align-items-center"
             style={{ borderRadius: "5px" }}
