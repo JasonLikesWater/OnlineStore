@@ -4,7 +4,7 @@ using OnlineStore.Models;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SalesController : ControllerBase {
+public class SalesController : ControllerBase, ISalesController {
     private readonly ISaleRepository _saleRepo;
     public SalesController(ISaleRepository saleRepo){
         _saleRepo = saleRepo;
