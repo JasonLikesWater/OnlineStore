@@ -61,7 +61,7 @@ function SalesPage() {
                     </span>
                   </h5>
                   <div className="text-muted small">
-                    Until {new Date(sale.endDate).toLocaleDateString()}
+                    {new Date(sale.startDate).toLocaleDateString()} - {new Date(sale.endDate).toLocaleDateString()}
                   </div>
                 </div>
               </div>
