@@ -7,5 +7,5 @@ public interface ISaleRepository
     List<Sale> GetSaleByCategory(string category);
     List<Sale> GetSaleByDate(string date);
     List<Sale> GetActiveSales();
-    
+    List<MovieSale> GetActiveMovieSales();
 }

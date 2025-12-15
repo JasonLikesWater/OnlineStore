@@ -104,9 +104,10 @@ VALUES
 (12, 13),
 (13, 14);
 
+-- after creating a sale, you must manually add the affected movies to MovieSales for them to have the discount applied.
 INSERT INTO Sales (Discount, StartDate, EndDate, Category)
 VALUES
-(10, '2024-01-01', '2026-01-10', 'Action Movies'),
+(10, '2024-01-01', '2026-01-10', 'Action'),
 (5, '2024-02-01', '2026-02-28', 'Sci-Fi'),
 (25, '2024-05-01', '2026-05-07', 'Drama');
 
