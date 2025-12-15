@@ -12,19 +12,19 @@ namespace OnlineStore.Controllers;
 // Defines the base route for all methods in this controller: /api/movies
 [Route("api/[controller]")]
 [ApiController] // Indicates this class is an API controller
-public class MoviesController : ControllerBase
+public class MoviesController : ControllerBase, IMovieController
 {
-    private readonly MovieRepository _movieRepository;
+    private readonly IMovieRepository _movieRepository;
 
     // Constructor for Dependency Injection (assuming setup in Program.cs)
-    public MoviesController(MovieRepository movieRepository)
+    public MoviesController(IMovieRepository movieRepository)
     {
         _movieRepository = movieRepository;
     }
 
     // Corresponds to: GET http://localhost:PORT/api/movies
     [HttpGet]
-    public ActionResult<IEnumerable<MovieDetails>> GetMovies()
+    public ActionResult<IEnumerable<Movie>> GetMovies()
     {
         try
         {

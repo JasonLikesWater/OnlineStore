@@ -11,10 +11,10 @@ using OnlineStore.Models;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase, IUserController
 {
-    private readonly UserRepository _userRepo;
+    private readonly IUserRepository _userRepo;
     private readonly IConfiguration _config;
 
-    public UsersController(UserRepository userRepo, IConfiguration config)
+    public UsersController(IUserRepository userRepo, IConfiguration config)
     {
         _userRepo = userRepo;
         _config = config;

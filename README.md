@@ -44,5 +44,28 @@ Then open a seperate terminal and get into the Front_End\onlineStoreReact direct
 npm install
 npm run dev
 ```
-
 After running that command the terminal should display a local url. Press ctrl and click the url to open the website.
+
+To test the login and accounts use the following: 
+Email: johnseena@gmail.com
+Password: hash1
+
+# OnlineStore Unit Tests
+
+Movies Controller - 6 tests
+Sales Controller - 5 tests
+Users Controller - 5 tests
+Total - 16 tests
+
+# How to run the tests
+From the `Back_End_C` folder:
+```bash
+dotnet test OnlineStore.sln
+```
+Or 
+
+from the test project folder:
+```bash
+cd Tests/OnlineStore.Tests
+dotnet test
+```
