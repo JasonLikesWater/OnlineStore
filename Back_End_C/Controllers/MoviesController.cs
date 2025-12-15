@@ -12,7 +12,7 @@ namespace OnlineStore.Controllers;
 // Defines the base route for all methods in this controller: /api/movies
 [Route("api/[controller]")]
 [ApiController] // Indicates this class is an API controller
-public class MoviesController : ControllerBase
+public class MoviesController : ControllerBase, IMovieController
 {
     private readonly IMovieRepository _movieRepository;
 
