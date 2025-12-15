@@ -38,3 +38,7 @@ npm install
 npm run dev
 ```
 After running that command the terminal should display a local url. Press ctrl and click the url to open the website.
+
+To test the login and accounts use the following: 
+Email: johnseena@gmail.com
+Password: hash1
