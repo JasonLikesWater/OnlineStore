@@ -31,7 +31,7 @@ dotnet build
 dotnet run
 ```
 
-Then open a seperate terminal and get into the Front_End\PnlineStoreReact directory. Once in said directory run the following commands.
+Then open a seperate terminal and get into the Front_End\OnlineStoreReact directory. Once in said directory run the following commands.
 
 ```bash
 npm install
