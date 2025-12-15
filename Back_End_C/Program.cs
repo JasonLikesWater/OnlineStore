@@ -32,6 +32,7 @@ builder.Services.AddScoped<OnlineStore.Repository.UserRepository>(s => new Onlin
 builder.Services.AddScoped<OnlineStore.Repository.MovieRepository>(s => new OnlineStore.Repository.MovieRepository(connString));
 builder.Services.AddScoped<IMovieRepository>(s => new MovieRepository(connString));
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<IUserRepository>(s => new UserRepository(connString));
 
 builder.Services.AddControllers();
 
