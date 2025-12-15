@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 // Assuming MovieDetails is the correct type for both pages, or is compatible with Movie
-import { type MovieDetails } from "../../interfaces";
+import { type Movie } from "../../interfaces";
 
 // Define your API constants clearly
 const BASE_API_URL = "http://localhost:5000/api";
@@ -14,13 +14,13 @@ const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q");
 
-  const [results, setResults] = useState<MovieDetails[]>([]); // Using 'results' state
+  const [results, setResults] = useState<Movie[]>([]); // Using 'results' state
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate(); // Needed for handleAddToCart and login redirection
 
   // 2. Add to Cart Function (Copied and adapted from DetailsPage)
-  const handleAddToCart = async (movie: MovieDetails) => {
+  const handleAddToCart = async (movie: Movie) => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/Pages/loginPage");
@@ -78,7 +78,7 @@ const SearchResultsPage = () => {
           );
         }
 
-        const data: MovieDetails[] = await response.json();
+        const data: Movie[] = await response.json();
         setResults(data);
       } catch (err: any) {
         console.error("Search fetch failed:", err);
