@@ -5,7 +5,7 @@ using OnlineStore.Models;
 
 namespace OnlineStore.Repository;
 
-public class UserRepository
+public class UserRepository : IUserRepository
 {
     private readonly string _connectionString;
     public UserRepository(string connectionString)
