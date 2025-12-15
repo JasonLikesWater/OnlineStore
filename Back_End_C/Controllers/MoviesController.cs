@@ -41,6 +41,34 @@ public class MoviesController : ControllerBase, IMovieController
         }
     }
 
+    // Corresponds to: GET http://localhost:PORT/api/movies/search?title=fragment
+    [HttpGet("search")]
+    public ActionResult<IEnumerable<Movie>> SearchMovies([FromQuery] string title)
+    {
+        // Best practice: Always wrap database/repository calls in a try/catch block.
+        try
+        {
+            // 1. Validate the input first
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                // Optional: return an empty list (200 OK) or a Bad Request (400)
+                return Ok(Enumerable.Empty<Movie>());
+            }
+
+            // 2. Call the repository method (which uses LIKE %title%)
+            var movies = _movieRepository.GetMoviesByTitleLike(title);
+
+            // 3. Return the results
+            return Ok(movies);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (use a proper logger like ILogger in production)
+            Console.WriteLine($"Error during movie search: {ex.Message}");
+            return StatusCode(500, "An unexpected error occurred while processing the search.");
+        }
+    }
+
     // Corresponds to: GET http://localhost:PORT/api/movies/:id
     [HttpGet("{id}")]
     public ActionResult<Movie> GetMovie(int id)
@@ -72,5 +100,5 @@ public class MoviesController : ControllerBase, IMovieController
         return Ok(movieDetails);
     }
 
-    // Add other GET routes here (e.g., GetMovieReviews, GetMovieEverything)
+
 }

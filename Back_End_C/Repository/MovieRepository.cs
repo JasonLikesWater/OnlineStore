@@ -6,7 +6,7 @@ using OnlineStore.Models; // <-- Must import the model definitions
 
 namespace OnlineStore.Repository;
 
-public class MovieRepository : IMovieRepository
+public class MovieRepository
 {
     private readonly string _connectionString;
 
@@ -68,8 +68,6 @@ public class MovieRepository : IMovieRepository
         return db.Query<Review>(sql, new { MovieId = movieId });
     }
 
-
-
     // Corresponds to: GET /api/movies/:id/everything
     // NOTE: This complex query might return multiple rows for one movie (e.g., one row per review/sale item).
     public IEnumerable<OnlineStore.Models.MovieDetails> GetMovieEverything(int movieId)
@@ -119,14 +117,12 @@ WHERE
         return db.Query<OnlineStore.Models.MovieDetails>(sql, new { MovieId = movieId });
     }
 
-    // // Corresponds to: GET /api/movies/:title (using LIKE)
-    // public IEnumerable<Movie> GetMoviesByTitleLike(string titleFragment)
-    // {
-    //     // NOTE: Your JS uses `req.params.title` and a LIKE query, which means it's a search, 
-    //     // not a direct match, so I'm returning a list/IEnumerable.
-    //     const string sql = "SELECT * FROM Movies WHERE Title LIKE @TitlePattern";
-    //     using IDbConnection db = new SqlConnection(_connectionString);
-    //     // The Dapper dynamic parameter object automatically handles adding the '%' for LIKE
-    //     return db.Query<Movie>(sql, new { TitlePattern = $"%{titleFragment}%" });
-    // }
+    public IEnumerable<Movie> GetMoviesByTitleLike(string titleFragment)
+    {
+
+
+        const string sql = "SELECT * FROM Movies WHERE Title LIKE @TitlePattern";
+        using IDbConnection db = new SqlConnection(_connectionString);
+        return db.Query<Movie>(sql, new { TitlePattern = $"%{titleFragment}%" });
+    }
 }

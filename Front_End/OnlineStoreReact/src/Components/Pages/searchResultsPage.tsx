@@ -1,28 +1,25 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { type Movie } from "../../interfaces.ts";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+// Assuming MovieDetails is the correct type for both pages, or is compatible with Movie
+import { type Movie } from "../../interfaces";
 
-const API_URL = "http://localhost:5000/api/movies";
-var API_URL2 = "http://localhost:5000/api";
+// Define your API constants clearly
+const BASE_API_URL = "http://localhost:5000/api";
+const SEARCH_API_URL = `${BASE_API_URL}/movies/search`;
+const CART_API_URL = `${BASE_API_URL}/users/me/carts`;
 
-function DetailsPage() {
-  // Note: You might want to rename this component to ProductListPage
-  // State Initialization
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+const SearchResultsPage = () => {
+  // 1. State and URL Hooks
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q");
+
+  const [results, setResults] = useState<Movie[]>([]); // Using 'results' state
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Needed for handleAddToCart and login redirection
 
-  // const readJsonError = async (response) => {
-  //   try {
-  //     return await response.json();
-  //   } catch {
-  //     return { message: "Unknown server error." };
-  //   }
-  // };
-
+  // 2. Add to Cart Function (Copied and adapted from DetailsPage)
   const handleAddToCart = async (movie: Movie) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -30,8 +27,9 @@ function DetailsPage() {
       return;
     }
     if (!movie || !movie.movieId) return;
+
     try {
-      const response = await fetch(`${API_URL2}/users/me/carts`, {
+      const response = await fetch(CART_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,52 +37,66 @@ function DetailsPage() {
         },
         body: JSON.stringify({ movieId: movie.movieId }),
       });
+
       if (!response.ok) {
-        // Log the full response status/text for debugging
         const errorText = await response.text();
         console.error(
           `Cart API Error: HTTP Status ${response.status}`,
           errorText
         );
-
-        // Throw an error to trigger the catch block below
         throw new Error(
-          `Failed to add movie to cart. Server responded with status: ${response.status}.`
+          `Failed to add movie to cart. Server status: ${response.status}.`
         );
       }
 
-      // If response.ok is true, the movie was added successfully!
       alert(`Successfully added "${movie.title}" to your cart!`);
     } catch (err) {
       console.error("Add to cart error:", err);
+      alert(`Failed to add "${movie.title}" to cart.`);
     }
   };
 
-  // Data Fetching Hook
+  // 3. Data Fetching Hook
   useEffect(() => {
-    const fetchMovies = async () => {
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    const fetchResults = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        const response = await axios.get<Movie[]>(API_URL);
-        setMovies(response.data);
-        setLoading(false);
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.message) {
-          setError(`Failed to fetch movies: ${err.message}.`);
-        } else {
-          setError("An unknown network error occurred.");
+        const url = `${SEARCH_API_URL}?title=${encodeURIComponent(query)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          const errorDetails = await response.text();
+          throw new Error(
+            `HTTP error! status: ${response.status}. Details: ${errorDetails}`
+          );
         }
-        setLoading(false);
+
+        const data: Movie[] = await response.json();
+        setResults(data);
+      } catch (err: any) {
+        console.error("Search fetch failed:", err);
+        setError(`Failed to fetch results. ${err.message}`);
+        setResults([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchMovies();
-  }, []);
+    fetchResults();
+  }, [query]);
 
-  // Conditional Rendering (Loading/Error States) ---
-  if (loading) {
+  // 4. Conditional Rendering (Matches DetailsPage logic)
+  if (isLoading) {
     return (
-      <div className="container mt-5">
-        <h2>Loading Movie Inventory...</h2>
+      <div className="container mt-5 text-light">
+        <h2>Searching for movies...</h2>
       </div>
     );
   }
@@ -92,46 +104,43 @@ function DetailsPage() {
   if (error) {
     return (
       <div className="container mt-5 alert alert-danger">
-        <h2>Error Connecting to Server</h2>
+        <h2>Search Error</h2>
         <p>{error}</p>
-        <p>
-          **Troubleshooting Tip:** Ensure your server is running on the correct
-          port (e.g., 5000) and the route (`/api/movies`) is available.
-        </p>
       </div>
     );
   }
+
+  // 5. Render Results (Matches DetailsPage structure)
   return (
     <div>
       <div className="tile-pattern">
         <div className="tile-3"></div>
       </div>
       <div className="container text-light">
-        <h1 className="my-4 catalog-header">Movie Catalog</h1>
+        <h1 className="my-4 catalog-header">Search Results for: "{query}"</h1>
 
-        {movies.length === 0 ? (
+        {results.length === 0 ? (
           <div className="alert alert-info mt-4">
-            No movies were found in the database.
+            No movies were found matching **"{query}"** in the database.
           </div>
         ) : (
           // Bootstrap grid structure for the movie cards
-          <div className="row row-cols-1 row-cols-md-3 g-4 mx-5 mb-5">
-            {/* Loop through the fetched movies array and generate a card for each */}
-
-            {movies.map((movie) => (
-              // 🚀 FIX 1: The key prop must be on the outermost element of the map function, which is the <Link>.
+          // Note: Removed the 'mx-5 mb-5' classes for better alignment in a general search container
+          <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            {/* Loop through the fetched results array */}
+            {results.map((movie) => (
               <Link
-                key={movie.movieId} // <-- Key moved here
+                key={movie.movieId}
                 to={`/Pages/productDetailsPage/${movie.movieId}`}
                 className="card-link-wrapper text-decoration-none"
               >
-                {/* Removed the key from the <div> element */}
                 <div className="col">
                   <div className="card h-100 shadow-sm movie-card">
                     <img
                       src={movie.coverImage}
                       className="card-img-top"
                       style={{ maxHeight: "450px", objectFit: "cover" }}
+                      alt={movie.title}
                     />
                     <div className="card-body">
                       <h5 className="card-title">{movie.title}</h5>
@@ -148,12 +157,9 @@ function DetailsPage() {
                         {new Date(movie.releaseDate).toLocaleDateString()}
                       </p>
 
-                      {/* 🛠️ FIX 2: Replaced the nested <a> with a <button> tag. 
-                          This resolves the "<a> cannot be a descendant of <a>" error. */}
                       <button
-                        type="button" // Use type="button" for clarity
+                        type="button"
                         onClick={(e) => {
-                          // Stop propagation prevents the click from triggering the parent <Link> navigation
                           e.preventDefault();
                           handleAddToCart(movie);
                           e.stopPropagation();
@@ -173,6 +179,6 @@ function DetailsPage() {
       </div>
     </div>
   );
-}
+};
 
-export default DetailsPage;
+export default SearchResultsPage;
