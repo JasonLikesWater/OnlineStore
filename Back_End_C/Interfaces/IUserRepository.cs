@@ -13,4 +13,6 @@ public interface IUserRepository
     Task<List<Review>> GetReviewsByUserAsync(int userId);
     Task<User?> UpdateUserAsync(int userId, UpdateUserRequest request);
     Task<bool> DeleteUserAsync(int userId);
+    Task<int> AddMovieToCartAsync(int userId, int movieId);
+    Task<bool> RemoveOrderFromCartAsync(int userId, int orderId);
 }

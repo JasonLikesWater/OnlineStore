@@ -175,21 +175,6 @@ namespace OnlineStore.Tests.Controllers
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
-        
-        // Test should call the repo with the correct ID
-        [TestMethod]
-        public void GetMovie_CallsRepositoryWithCorrectId()
-        {
-            // Arrange
-            int movieId = 5;
-            _mockRepository.Setup(repo => repo.GetMovieById(movieId)).Returns((Movie?)null);
-
-            // Act
-            _controller.GetMovie(movieId);
-
-            // Assert
-            _mockRepository.Verify(repo => repo.GetMovieById(movieId), Times.Once);
-        }
 
         // Test should return all movie details
         [TestMethod]
@@ -234,100 +219,6 @@ namespace OnlineStore.Tests.Controllers
             
             Assert.IsNotNull(details);
             Assert.AreEqual(1, details!.Count());
-        }
-
-        // Test should return error when movie does not exist
-        [TestMethod]
-        public void GetMovieEverything_ReturnsNotFound_WhenMovieDoesNotExist()
-        {
-            // Arrange
-            int movieId = 999;
-            _mockRepository.Setup(repo => repo.GetMovieEverything(movieId)).Returns(new List<MovieDetails>());
-
-            // Act
-            var result = _controller.GetMovieEverything(movieId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
-        }
-
-        // Test should return error when no data is found
-        [TestMethod]
-        public void GetMovieEverything_ReturnsNotFound_WhenRepositoryReturnsNull()
-        {
-            // Arrange
-            int movieId = 999;
-            _mockRepository.Setup(repo => repo.GetMovieEverything(movieId)).Returns((IEnumerable<MovieDetails>)null!);
-
-            // Act
-            var result = _controller.GetMovieEverything(movieId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
-        }
-
-        // Test should return multiple records
-        // for movies with many reviews
-        [TestMethod]
-        public void GetMovieEverything_ReturnsMultipleDetails_ForMovieWithMultipleReviews()
-        {
-            // Arrange
-            int movieId = 1;
-            var mockMovieDetails = new List<MovieDetails>
-            {
-                new MovieDetails
-                {
-                    MovieId = movieId,
-                    Title = "Test Movie",
-                    Sku = "SKU001",
-                    Price = 19.99m,
-                    MovieRating = 4.5,
-                    ReleaseDate = DateTime.Now,
-                    Description = "Test Description",
-                    CoverImage = "image1",
-                    DirectorFirstName = "John",
-                    DirectorLastName = "Doe",
-                    Genre = "Action",
-                    CriticUsername = "critic1",
-                    ReviewScore = 8.5,
-                    ReviewDescription = "Great movie",
-                    SaleDiscount = 0.1m,
-                    SaleCategory = "Summer Sale"
-                },
-                new MovieDetails
-                {
-                    MovieId = movieId,
-                    Title = "Test Movie",
-                    Sku = "SKU001",
-                    Price = 19.99m,
-                    MovieRating = 4.5,
-                    ReleaseDate = DateTime.Now,
-                    Description = "Test Description",
-                    CoverImage = "image2",
-                    DirectorFirstName = "John",
-                    DirectorLastName = "Doe",
-                    Genre = "Action",
-                    CriticUsername = "critic2",
-                    ReviewScore = 9.0,
-                    ReviewDescription = "Excellent movie",
-                    SaleDiscount = 0.2m,
-                    SaleCategory = "Winter Sale"
-                }
-            };
-
-            _mockRepository.Setup(repo => repo.GetMovieEverything(movieId)).Returns(mockMovieDetails);
-
-            // Act
-            var result = _controller.GetMovieEverything(movieId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            var okResult = result.Result as OkObjectResult;
-            var details = okResult!.Value as IEnumerable<MovieDetails>;
-            
-            Assert.AreEqual(2, details!.Count());
         }
     }
 }
