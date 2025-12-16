@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-\*\* Must have correct SSMS configuration and sql insert and create queries must be run before starting
+\*\* Must have correct SSMS configuration and sql insert and create queries must be run before starting (Create_Table.sql and InsertTestData.sql)
 
 How To run the website
 
